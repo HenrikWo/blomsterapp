@@ -129,6 +129,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   const onTouchEnd = (e: React.TouchEvent) => {
     if (!harFlereBilder) {
       // Hvis kun ett bilde, håndter som tap for å åpne info
+      e.preventDefault();
       setVisInfo(!visInfo);
       return;
     }
@@ -141,10 +142,11 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     
     const touchDuration = touchStartTime ? Date.now() - touchStartTime : 0;
     const distance = touchStart - touchEnd;
-    const wasTap = Math.abs(distance) < 10 && touchDuration < 200; // Kort tap med minimal bevegelse
+    const wasTap = Math.abs(distance) < 15 && touchDuration < 300; // Mer rause grenser
     
     if (wasTap) {
       // Det var en tap, ikke en swipe - åpne/lukk info
+      e.preventDefault();
       setVisInfo(!visInfo);
       setDragOffset(0);
       setIsDragging(false);
@@ -155,8 +157,8 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     setIsAnimating(true);
     
     const velocity = Math.abs(distance) / 100;
-    const isLeftSwipe = distance > minSwipeDistance || (distance > 10 && velocity > 0.5);
-    const isRightSwipe = distance < -minSwipeDistance || (distance < -10 && velocity > 0.5);
+    const isLeftSwipe = distance > minSwipeDistance || (distance > 15 && velocity > 0.5);
+    const isRightSwipe = distance < -minSwipeDistance || (distance < -15 && velocity > 0.5);
 
     let bildeByttet = false;
 
@@ -185,9 +187,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    // Kun for desktop - mobil bruker touch events
-    if ('ontouchstart' in window) return;
-    
+    // Tillat click events på alle enheter som fallback
     if (isAnimating) return;
     
     setVisInfo(!visInfo);
