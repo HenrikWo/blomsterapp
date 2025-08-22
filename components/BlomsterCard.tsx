@@ -152,7 +152,10 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     }, 300);
   };
 
-  const handleClick = () => {
+  const handleClick = (e?: React.MouseEvent) => {
+    // Ikke toggle info hvis vi er midt i en animasjon
+    if (isAnimating) return;
+    
     setVisInfo(!visInfo);
     onClick?.();
   };
@@ -171,6 +174,11 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       // Marker at brukeren har interagert med bilder (globalt)
       localStorage.setItem('hasSwipedBlomster', 'true');
       setShowSwipeHint(false);
+      
+      // Skjul info-overlay hvis det er åpent
+      if (visInfo) {
+        setVisInfo(false);
+      }
       
       setTimeout(() => {
         setIsAnimating(false);
