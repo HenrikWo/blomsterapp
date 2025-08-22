@@ -23,7 +23,7 @@ Einstappe,Poterium sanguisorba,Rosefamilien,Urt/staude,,https://norskflora.no/pl
 Enghumleblom,Anthriscus sylvestris,Skjermplantefamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzi263.jpg,https://norskflora.no/plante/?sle=Anthriscus&art=sylvestris,FUNNET
 Engkjærblom,Cardamine pratensis,Karsefamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzi192.jpg,https://norskflora.no/plante/?sle=Cardamine&art=pratensis,FUNNET
 Engknoppurt,Succisa pratensis,Kjempefamilien,Urt/staude,https://bilder.norskflora.no/orig/IMG_4428.jpg,https://norskflora.no/plante/?sle=Succisa&art=pratensis,FUNNET
-Engsolei,Primula veris,Primulafamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzi136.jpg,https://norskflora.no/plante/?sle=Primula&art=veris,FUNNET
+Engsolei,Primula veris,Primulafamilien,Urt/staude,,IKKE_FUNNET
 Firkantperikum,Hypericum maculatum,Perikumfamilien,Urt/staude,https://bilder.norskflora.no/orig/floradanica_2836.jpg,https://norskflora.no/plante/?sle=Hypericum&art=maculatum,FUNNET
 Fjellbjørk,Betula pubescens,Bjørkefamilien,Tre/busk,,https://norskflora.no/plante/?sle=Betula&art=pubescens,IKKE_FUNNET
 Fjellmarikåpe,Alchemilla alpina,Rosefamilien,Urt/staude,https://bilder.norskflora.no/orig/sturm13_31.jpg,https://norskflora.no/plante/?sle=Alchemilla&art=alpina,FUNNET
@@ -44,7 +44,7 @@ Greplyng,Andromeda polifolia,Lyngfamilien,Urt/staude,https://bilder.norskflora.n
 Grå Or,Quercus robur,Bjørkefamilien,Tre/busk,https://bilder.norskflora.no/orig/mentzii368.jpg,https://norskflora.no/plante/?sle=Quercus&art=robur,FUNNET
 Gulmaure,Galeopsis tetrahit,Leppeblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/floradanica_1271.jpg,https://norskflora.no/plante/?sle=Galeopsis&art=tetrahit,FUNNET
 Gulskolm,Caltha palustris,Soleiefamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzi174.jpg,https://norskflora.no/plante/?sle=Caltha&art=palustris,FUNNET
-Gåsemure,Oxalis acetosella,Syreblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/IMG_1615.jpg,https://norskflora.no/plante/?sle=Oxalis&art=acetosella,FUNNET
+Gåsemure,Oxalis acetosella,Syreblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzii299.jpg,hhttps://norskflora.no/plante/?sle=Argentina&art=anserina,FUNNET
 Hagetorn,Crataegus monogyna,Rosefamilien,Tre/busk,https://bilder.norskflora.no/orig/mentziv613.jpg,https://norskflora.no/plante/?sle=Crataegus&art=monogyna,FUNNET
 Harekløver,Trifolium arvense,Erteblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/floradanica_0724.jpg,https://norskflora.no/plante/?sle=Trifolium&art=arvense,FUNNET
 Hassel,Corylus avellana,Nøttefamilien,Tre/busk,https://bilder.norskflora.no/orig/mentzii370.jpg,https://norskflora.no/plante/?sle=Corylus&art=avellana,FUNNET
@@ -79,7 +79,7 @@ Linjekonvall,Convallaria majalis,Aspargesfamilien,Urt/staude,https://bilder.nors
 Lintorskemunn,Linaria vulgaris,Maskeblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/floradanica_0982.jpg,https://norskflora.no/plante/?sle=Linaria&art=vulgaris,FUNNET
 Lyssiv,Luzula luzuloides,Sivfamilien,Gressplante,https://bilder.norskflora.no/orig/floradanica_1096.jpg,https://norskflora.no/plante/?sle=Juncus&art=effusus,FUNNET
 Løkurt,Allium schoenoprasum,Løkfamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzii386.jpg,https://norskflora.no/plante/?sle=Allium&art=schoenoprasum,FUNNET
-Maiblom,Cardamine pratensis,Karsefamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzi192.jpg,https://norskflora.no/plante/?sle=Cardamine&art=pratensis,FUNNET
+Maiblom,Cardamine pratensis,Karsefamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzii392.jpg",https://norskflora.no/plante/?sle=Maianthemum&art=bifolium,FUNNET
 Marikåpe,Alchemilla vulgaris,Rosefamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzii297.jpg,https://norskflora.no/plante/?sle=Alchemilla&art=vulgaris,FUNNET
 Markjordbær,Fragaria vesca,Rosefamilien,Urt/staude,https://bilder.norskflora.no/orig/floradanica_2235.jpg,https://norskflora.no/plante/?sle=Fragaria&art=vesca,FUNNET
 Meldestokk,Chenopodium album,Amarantfamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzii351.jpg,https://norskflora.no/plante/?sle=Chenopodium&art=album,FUNNET
@@ -91,7 +91,7 @@ Myrull,Eriophorum angustifolium,Sivfamilien,Gressplante,https://bilder.norskflor
 Myskegras,Deschampsia cespitosa,Grasfamilien,Gressplante,https://bilder.norskflora.no/orig/mentzii462.jpg,https://norskflora.no/plante/?sle=Deschampsia&art=cespitosa,FUNNET
 Osp,Populus tremula,Willowfamilien,Tre/busk,https://bilder.norskflora.no/orig/DSC_0364.jpg,https://norskflora.no/plante/?sle=Populus&art=tremula,FUNNET
 Pors,Ledum palustre,Lyngfamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzii375.jpg,https://norskflora.no/plante/?sle=Myrica&art=gale,FUNNET
-Raud jonsokblom,Ajuga pyramidalis,Leppeblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/mentzi103.jpg,https://norskflora.no/plante/?sle=Ajuga&art=pyramidalis,FUNNET
+Rød jonsokblom,Ajuga pyramidalis,Leppeblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/floradanica_2172.jpg,https://norskflora.no/plante/?sle=Silene&art=dioica,FUNNET
 Raudhyll,Sambucus racemosa,Hyllebærfamilien,Tre/busk,,https://norskflora.no/plante/?sle=Sambucus&art=racemosa,IKKE_FUNNET
 Reinfann,Tanacetum vulgare,Erteblomstfamilien,Urt/staude,https://bilder.norskflora.no/orig/IMG_1609.jpg,https://norskflora.no/plante/?sle=Tanacetum&art=vulgare,FUNNET
 Rundskolm,Polygonum spp.,Slireknefamilien,Urt/staude,,https://norskflora.no/plante/?sle=Polygonum&art=spp.,IKKE_FUNNET
