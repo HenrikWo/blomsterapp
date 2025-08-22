@@ -1,4 +1,4 @@
-echo '@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -41,4 +41,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}' > app/globals.css
+}

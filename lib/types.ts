@@ -1,73 +1,18 @@
-import type { Blomst } from './types';
-
-export interface QuizSpørsmål {
-  blomst: Blomst;
-  alternativer: string[];
-  riktigSvar: string;
+// Type-definisjoner for blomsterdata
+export interface Blomst {
+  familienavn: string;
+  vitenskapeligNavn: string;
+  slektNorsk: string;
+  artNorsk: string;
+  sjikt: string;
+  bildeUrl: string;
+  wikipediaUrl: string;
+  bildeStatus: 'FUNNET' | 'IKKE_FUNNET' | 'MANGLER_NAVN';
 }
 
-export interface QuizSvar {
-  spørsmålIndex: number;
-  valgtSvar: string;
-  riktigSvar: string;
-  erRiktig: boolean;
-}
-
-export interface QuizResultat {
-  totalSpørsmål: number;
-  riktigeSvar: number;
-  poengsum: number;
-  svar: QuizSvar[];
-  karakter: string;
-  beskrivelse: string;
-}
-
-export function genererQuiz(blomster: Blomst[], antallSpørsmål: number = 10): QuizSpørsmål[] {
-  const blomsterMedBilder = blomster.filter(b => b.bildeStatus === 'FUNNET');
-  
-  if (blomsterMedBilder.length < antallSpørsmål) {
-    throw new Error('Ikke nok blomster med bilder for å lage quiz');
-  }
-  
-  // Shuffle og velg tilfeldige blomster
-  const shuffled = [...blomsterMedBilder].sort(() => 0.5 - Math.random());
-  const valgteBlomseter = shuffled.slice(0, antallSpørsmål);
-  
-  return valgteBlomseter.map(blomst => {
-    // Finn andre blomster for feil-alternativer
-    const andreBlomseter = blomsterMedBilder
-      .filter(b => b.artNorsk !== blomst.artNorsk)
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 3);
-    
-    // Lag alternativer
-    const alternativer = [
-      blomst.artNorsk,
-      ...andreBlomseter.map(b => b.artNorsk)
-    ].sort(() => 0.5 - Math.random()); // Shuffle rekkefølgen
-    
-    return {
-      blomst,
-      alternativer,
-      riktigSvar: blomst.artNorsk
-    };
-  });
-}
-
-export function beregnKarakter(riktigeSvar: number, totalSpørsmål: number): { karakter: string; beskrivelse: string } {
-  const prosent = (riktigeSvar / totalSpørsmål) * 100;
-  
-  if (prosent >= 90) {
-    return { karakter: '', beskrivelse: '🌟 Eksepsjonelt! Du er en blomsterekspert!' };
-  } else if (prosent >= 80) {
-    return { karakter: '', beskrivelse: '🌸 Meget bra! Du kjenner blomstene godt!' };
-  } else if (prosent >= 70) {
-    return { karakter: '', beskrivelse: '🌱 Bra jobbet! Du er på god vei!' };
-  } else if (prosent >= 60) {
-    return { karakter: '', beskrivelse: '🌿 Greit! Litt mer trening trengs.' };
-  } else if (prosent >= 50) {
-    return { karakter: '', beskrivelse: '🍃 Bestått, men du bør øve mer!' };
-  } else {
-    return { karakter: '', beskrivelse: '💔 Ikke bestått. Øv mer og prøv igjen!' };
-  }
+export interface BlomsterData {
+  blomster: Blomst[];
+  totalAntall: number;
+  medBilder: number;
+  utenBilder: number;
 }
