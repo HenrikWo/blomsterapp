@@ -199,8 +199,14 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     console.warn(`Kunne ikke laste bilde for ${blomst.artNorsk}:`, aktivtBilde);
   };
 
-  const navigerTilBilde = (index: number) => {
+  const navigerTilBilde = (index: number, e?: React.MouseEvent) => {
     if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length && !isAnimating) {
+      // Stop event propagation for å forhindre at container-click trigges
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      
       setIsAnimating(true);
       setAktivtBildeIndex(index);
       setBildeLastet(false);
@@ -354,10 +360,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
             {/* Venstre pil */}
             {aktivtBildeIndex > 0 && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigerTilBilde(aktivtBildeIndex - 1);
-                }}
+                onClick={(e) => navigerTilBilde(aktivtBildeIndex - 1, e)}
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
                 aria-label="Forrige bilde"
               >
@@ -370,10 +373,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
             {/* Høyre pil */}
             {aktivtBildeIndex < gyldigeBilder.length - 1 && (
               <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigerTilBilde(aktivtBildeIndex + 1);
-                }}
+                onClick={(e) => navigerTilBilde(aktivtBildeIndex + 1, e)}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
                 aria-label="Neste bilde"
               >
@@ -393,6 +393,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                 key={index}
                 onClick={(e) => {
                   e.stopPropagation();
+                  e.preventDefault();
                   navigerTilBilde(index);
                 }}
                 className={`w-2 h-2 rounded-full transition-all duration-200 ${
