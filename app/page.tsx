@@ -96,7 +96,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-3">
-                🌿 BlomsterApp
+                🌿 PlantePugger
               </h1>
               <p className="text-sm text-emerald-700/80 mt-1">
                 {blomsterData.medBilder} av {blomsterData.totalAntall} blomster med bilder
@@ -104,11 +104,11 @@ export default function Home() {
             </div>
             
             <Link
-              href="/test_deg_selv"
-              className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 shadow-md"
-            >
-              🧠 Test deg selv
-            </Link>
+            href="/test_deg_selv"
+            className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 shadow-md whitespace-nowrap"
+          >
+            🧠 Test deg selv
+          </Link>
           </div>
         </div>
       </header>

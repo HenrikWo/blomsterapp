@@ -83,13 +83,13 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
             <p className="text-xl italic text-emerald-300 mb-6">{blomst.vitenskapeligNavn}</p>
             
             <div className="space-y-3 text-left bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-              <div className="flex justify-between">
-                <span className="font-semibold text-emerald-300">Familie:</span> 
-                <span>{blomst.familienavn}</span>
+              <div className="flex justify-between items-start gap-4">
+                <span className="font-semibold text-emerald-300 flex-shrink-0">Familie:</span> 
+                <span className="text-right">{blomst.familienavn}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="font-semibold text-emerald-300">Type:</span> 
-                <span>{blomst.type}</span>
+              <div className="flex justify-between items-start gap-4">
+                <span className="font-semibold text-emerald-300 flex-shrink-0">Type:</span> 
+                <span className="text-right">{blomst.type}</span>
               </div>
             </div>
 
