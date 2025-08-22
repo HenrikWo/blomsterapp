@@ -82,6 +82,10 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
 
   const onTouchStart = (e: React.TouchEvent) => {
     if (!harFlereBilder) return;
+    
+    // Forhindre default scroll-oppførsel på mobil
+    e.preventDefault();
+    
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(true);
@@ -94,6 +98,10 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
 
   const onTouchMove = (e: React.TouchEvent) => {
     if (!harFlereBilder || !touchStart) return;
+    
+    // Forhindre default scroll-oppførsel på mobil
+    e.preventDefault();
+    
     const currentTouch = e.targetTouches[0].clientX;
     const diff = currentTouch - touchStart;
     setTouchEnd(currentTouch);
@@ -233,6 +241,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
+      style={{ touchAction: harFlereBilder ? 'none' : 'auto' }}
     >
       
       {/* Hovedbilde med drag-effekt */}
