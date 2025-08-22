@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import FeilrapportModal from './FeilrapportModal';
 import type { Blomst } from '@/lib/types';
@@ -15,6 +15,87 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   const [bildeFeil, setBildeFeil] = useState(false);
   const [visInfo, setVisInfo] = useState(false);
   const [visFeilrapport, setVisFeilrapport] = useState(false);
+  const [aktivtBildeIndex, setAktivtBildeIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Sjekk om blomsten har bilder og filtrer ut tomme/ugyldige
+  const gyldigeBilder = blomst.bildeUrls ? blomst.bildeUrls.filter(url => 
+    url && 
+    url.trim() !== '' && 
+    (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || 
+     url.includes('.webp') || url.includes('.gif') || url.includes('wikimedia.org') || 
+     url.includes('wikipedia.org'))
+  ) : [];
+  
+  const harBilder = gyldigeBilder.length > 0;
+  const harFlereBilder = gyldigeBilder.length > 1;
+  const aktivtBilde = harBilder ? gyldigeBilder[aktivtBildeIndex] : blomst.bildeUrl;
+  
+  // Analyser hvilket type innhold det aktive bildet er
+  const getBildeType = (url: string) => {
+    if (!url) return 'ukjent';
+    
+    // Norsk Flora direktebilde
+    if (url.includes('norskflora.no') && (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg'))) {
+      return 'norskflora-bilde';
+    }
+    
+    // Wikipedia/Wikimedia bilder
+    if (url.includes('wikipedia.org') || url.includes('wikimedia.org')) {
+      return 'wikipedia-bilde';
+    }
+    
+    // Andre direktebilder
+    if (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || url.includes('.webp') || url.includes('.gif')) {
+      return 'direktebilde';
+    }
+    
+    return 'ukjent';
+  };
+
+  const getBildeLabel = (url: string) => {
+    const type = getBildeType(url);
+    switch (type) {
+      case 'norskflora-bilde': return 'Norsk Flora bilde';
+      case 'wikipedia-bilde': return 'Wikipedia bilde';
+      case 'direktebilde': return 'Bilde';
+      default: return 'Bilde';
+    }
+  };
+
+  const aktivBildeType = getBildeType(aktivtBilde);
+  const erDirekteBilde = ['norskflora-bilde', 'wikipedia-bilde', 'direktebilde'].includes(aktivBildeType);
+
+  // Minimum swipe distance (i piksler)
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd || !harFlereBilder) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && aktivtBildeIndex < gyldigeBilder.length - 1) {
+      setAktivtBildeIndex(prev => prev + 1);
+      setBildeLastet(false);
+    }
+    if (isRightSwipe && aktivtBildeIndex > 0) {
+      setAktivtBildeIndex(prev => prev - 1);
+      setBildeLastet(false);
+    }
+  };
 
   const handleClick = () => {
     setVisInfo(!visInfo);
@@ -23,10 +104,25 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
 
   const handleBildeFeil = () => {
     setBildeFeil(true);
-    console.warn(`Kunne ikke laste bilde for ${blomst.artNorsk}:`, blomst.bildeUrl);
+    console.warn(`Kunne ikke laste bilde for ${blomst.artNorsk}:`, aktivtBilde);
   };
 
-  if (!blomst.bildeUrl || blomst.bildeStatus !== 'FUNNET') {
+  const navigerTilBilde = (index: number) => {
+    if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length) {
+      setAktivtBildeIndex(index);
+      setBildeLastet(false);
+    }
+  };
+
+  // Reset til første bilde når blomst endres
+  useEffect(() => {
+    setAktivtBildeIndex(0);
+    setBildeLastet(false);
+    setBildeFeil(false);
+  }, [blomst.artNorsk]);
+
+  // Hvis ingen bilder tilgjengelig
+  if (!harBilder || blomst.bildeStatus !== 'FUNNET') {
     return (
       <div className="relative w-full h-96 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center cursor-pointer group transition-all duration-300"
            onClick={handleClick}>
@@ -36,33 +132,91 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
           <p className="text-green-600 italic">{blomst.vitenskapeligNavn}</p>
           <p className="text-sm text-green-500 mt-2">Ingen bilde tilgjengelig</p>
         </div>
+        
+        {/* Info overlay for blomster uten bilder */}
+        {visInfo && (
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-sm rounded-2xl flex items-center justify-center p-8 transition-all duration-300">
+            <div className="text-center text-white max-w-sm">
+              <h2 className="text-3xl font-bold mb-3">{blomst.artNorsk}</h2>
+              <p className="text-xl italic text-emerald-300 mb-6">{blomst.vitenskapeligNavn}</p>
+              
+              <div className="space-y-3 text-left bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                <div className="flex justify-between items-start gap-4">
+                  <span className="font-semibold text-emerald-300 flex-shrink-0">Familie:</span> 
+                  <span className="text-right">{blomst.familienavn}</span>
+                </div>
+                <div className="flex justify-between items-start gap-4">
+                  <span className="font-semibold text-emerald-300 flex-shrink-0">Type:</span> 
+                  <span className="text-right">{blomst.type}</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3 mt-6">
+                {blomst.norskfloraUrl && (
+                  <a 
+                    href={blomst.norskfloraUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    🌿 Norsk Flora
+                  </a>
+                )}
+                
+                {blomst.wikipediaUrl && (
+                  <a 
+                    href={blomst.wikipediaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    📖 Wikipedia
+                  </a>
+                )}
+              </div>
+              
+              <p className="text-xs text-gray-300 mt-6">
+                Trykk igjen for å skjule info
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
   return (
-    <div className="relative w-full h-96 cursor-pointer group transition-all duration-300"
-         onClick={handleClick}>
+    <div 
+      ref={containerRef}
+      className="relative w-full h-96 cursor-pointer group transition-all duration-300"
+      onClick={handleClick}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
       
       {/* Hovedbilde */}
       <div className="relative w-full h-full rounded-xl overflow-hidden bg-gray-100">
         {!bildeFeil ? (
           <Image
-            src={blomst.bildeUrl}
-            alt={blomst.artNorsk}
+            key={`${blomst.artNorsk}-${aktivtBildeIndex}`}
+            src={aktivtBilde}
+            alt={`${blomst.artNorsk} - bilde ${aktivtBildeIndex + 1}`}
             fill
             className={`transition-opacity duration-500 ${bildeLastet ? 'opacity-100' : 'opacity-0'}`}
-            style={{ objectFit: 'contain' }} // Endret fra 'cover' til 'contain'
+            style={{ objectFit: 'contain' }}
             onLoad={() => setBildeLastet(true)}
             onError={handleBildeFeil}
-            unoptimized // Siden vi bruker eksterne URLs
+            unoptimized
             priority
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
             <div className="text-center">
               <div className="text-6xl mb-4">🌸</div>
-              <p className="text-green-600">Kunne ikke laste bilde</p>
+              <p className="text-green-600">Kunne ikke laste innhold</p>
             </div>
           </div>
         )}
@@ -73,11 +227,78 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
           </div>
         )}
+
+        {/* Navigasjonspiler for flere bilder */}
+        {harFlereBilder && bildeLastet && !bildeFeil && (
+          <>
+            {/* Venstre pil */}
+            {aktivtBildeIndex > 0 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigerTilBilde(aktivtBildeIndex - 1);
+                }}
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
+                aria-label="Forrige bilde"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            )}
+
+            {/* Høyre pil */}
+            {aktivtBildeIndex < gyldigeBilder.length - 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigerTilBilde(aktivtBildeIndex + 1);
+                }}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 opacity-0 group-hover:opacity-100 z-10"
+                aria-label="Neste bilde"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
+          </>
+        )}
+
+        {/* Bildeindikatorer */}
+        {harFlereBilder && (
+          <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1 z-10">
+            {gyldigeBilder.map((_, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigerTilBilde(index);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  index === aktivtBildeIndex 
+                    ? 'bg-white scale-125' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+                aria-label={`Gå til bilde ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Swipe-indikator for mobile */}
+        {harFlereBilder && (
+          <div className="absolute top-3 left-1/2 transform -translate-x-1/2 md:hidden z-10">
+            <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+              {getBildeLabel(aktivtBilde)} ({aktivtBildeIndex + 1}/{gyldigeBilder.length})
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Info overlay */}
       {visInfo && (
-        <div className="absolute inset-0 bg-black/85 backdrop-blur-sm rounded-2xl flex items-center justify-center p-8 transition-all duration-300">
+        <div className="absolute inset-0 bg-black/85 backdrop-blur-sm rounded-2xl flex items-center justify-center p-8 transition-all duration-300 z-20">
           <div className="text-center text-white max-w-sm">
             <h2 className="text-3xl font-bold mb-3">{blomst.artNorsk}</h2>
             <p className="text-xl italic text-emerald-300 mb-6">{blomst.vitenskapeligNavn}</p>
@@ -91,19 +312,39 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                 <span className="font-semibold text-emerald-300 flex-shrink-0">Type:</span> 
                 <span className="text-right">{blomst.type}</span>
               </div>
+              {harFlereBilder && (
+                <div className="flex justify-between items-start gap-4">
+                  <span className="font-semibold text-emerald-300 flex-shrink-0">Bilder:</span> 
+                  <span className="text-right">{gyldigeBilder.length} tilgjengelig</span>
+                </div>
+              )}
             </div>
 
-            {blomst.norskfloraUrl && (
-              <a 
-                href={blomst.norskfloraUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-6 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg"
-                onClick={(e) => e.stopPropagation()}
-              >
-                🌿 Les mer på Norsk Flora
-              </a>
-            )}
+            <div className="flex gap-3 mt-6">
+              {blomst.norskfloraUrl && (
+                <a 
+                  href={blomst.norskfloraUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  🌿 Norsk Flora
+                </a>
+              )}
+              
+              {blomst.wikipediaUrl && (
+                <a 
+                  href={blomst.wikipediaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  📖 Wikipedia
+                </a>
+              )}
+            </div>
             
             <p className="text-xs text-gray-300 mt-6">
               Trykk igjen for å skjule info
@@ -113,7 +354,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       )}
 
       {/* Subtil indikator for at man kan trykke - synlig på mobil, hover på desktop */}
-      <div className="absolute top-4 right-4 opacity-70 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-4 right-4 opacity-70 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10">
         <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
           <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -122,7 +363,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       </div>
 
       {/* Rapporter feil knapp - synlig på mobil, hover på desktop */}
-      <div className="absolute bottom-3 left-3">
+      <div className="absolute bottom-3 left-3 z-10">
         <button
           onClick={(e) => {
             e.stopPropagation();
