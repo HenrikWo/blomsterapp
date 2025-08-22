@@ -21,8 +21,6 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [touchStartTime, setTouchStartTime] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Sjekk om brukeren har swiped før (globalt)
@@ -83,113 +81,69 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   const minSwipeDistance = 30;
 
   const onTouchStart = (e: React.TouchEvent) => {
-    if (!harFlereBilder) {
-      // Hvis kun ett bilde, håndter som vanlig tap
-      return;
-    }
-    
-    // Forhindre default scroll-oppførsel på mobil
-    e.preventDefault();
+    if (!harFlereBilder) return;
     
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-    setTouchStartTime(Date.now());
     setIsDragging(true);
     setDragOffset(0);
     
-    // Marker at brukeren har swiped (globalt)
     localStorage.setItem('hasSwipedBlomster', 'true');
     setShowSwipeHint(false);
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    if (!harFlereBilder || !touchStart || isAnimating) return;
+    if (!harFlereBilder || !touchStart) return;
     
-    // Forhindre default scroll-oppførsel på mobil
     e.preventDefault();
     
     const currentTouch = e.targetTouches[0].clientX;
     const diff = currentTouch - touchStart;
     setTouchEnd(currentTouch);
     
-    // Økt maksimal drag-avstand og mer responsiv følelse
     const maxDrag = 150;
     const limitedDiff = Math.max(-maxDrag, Math.min(maxDrag, diff));
     
-    // Legg til litt motstand når man drar forbi grensene
     let finalOffset = limitedDiff;
     if ((aktivtBildeIndex === 0 && diff > 0) || 
         (aktivtBildeIndex === gyldigeBilder.length - 1 && diff < 0)) {
-      finalOffset = limitedDiff * 0.3; // Reduser drag-følsomhet ved grensene
+      finalOffset = limitedDiff * 0.3;
     }
     
     setDragOffset(finalOffset);
   };
 
-  const onTouchEnd = (e: React.TouchEvent) => {
+  const onTouchEnd = () => {
     if (!harFlereBilder) {
-      // Hvis kun ett bilde, håndter som tap for å åpne info
-      e.preventDefault();
-      setVisInfo(!visInfo);
+      setDragOffset(0);
+      setIsDragging(false);
       return;
     }
 
-    if (!touchStart || !touchEnd || isAnimating) {
+    if (!touchStart || !touchEnd) {
       setDragOffset(0);
       setIsDragging(false);
       return;
     }
     
-    const touchDuration = touchStartTime ? Date.now() - touchStartTime : 0;
     const distance = touchStart - touchEnd;
-    const wasTap = Math.abs(distance) < 15 && touchDuration < 300; // Mer rause grenser
-    
-    if (wasTap) {
-      // Det var en tap, ikke en swipe - åpne/lukk info
-      e.preventDefault();
-      setVisInfo(!visInfo);
-      setDragOffset(0);
-      setIsDragging(false);
-      return;
-    }
-    
-    // Det var en swipe - håndter bildebytting
-    setIsAnimating(true);
-    
     const velocity = Math.abs(distance) / 100;
-    const isLeftSwipe = distance > minSwipeDistance || (distance > 15 && velocity > 0.5);
-    const isRightSwipe = distance < -minSwipeDistance || (distance < -15 && velocity > 0.5);
-
-    let bildeByttet = false;
+    const isLeftSwipe = distance > minSwipeDistance || (distance > 10 && velocity > 0.5);
+    const isRightSwipe = distance < -minSwipeDistance || (distance < -10 && velocity > 0.5);
 
     if (isLeftSwipe && aktivtBildeIndex < gyldigeBilder.length - 1) {
       setAktivtBildeIndex(prev => prev + 1);
       setBildeLastet(false);
-      bildeByttet = true;
     } else if (isRightSwipe && aktivtBildeIndex > 0) {
       setAktivtBildeIndex(prev => prev - 1);
       setBildeLastet(false);
-      bildeByttet = true;
     }
     
-    // Hvis vi byttet bilde, lukk info
-    if (bildeByttet && visInfo) {
-      setVisInfo(false);
-    }
-    
-    // Reset drag state
     setDragOffset(0);
     setIsDragging(false);
-    
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 300);
   };
 
   const handleClick = (e: React.MouseEvent) => {
-    // Tillat click events på alle enheter som fallback
-    if (isAnimating) return;
-    
     setVisInfo(!visInfo);
     onClick?.();
   };
@@ -200,29 +154,17 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   };
 
   const navigerTilBilde = (index: number, e?: React.MouseEvent) => {
-    if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length && !isAnimating) {
-      // Stop event propagation for å forhindre at container-click trigges
+    if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length) {
       if (e) {
         e.stopPropagation();
         e.preventDefault();
       }
       
-      setIsAnimating(true);
       setAktivtBildeIndex(index);
       setBildeLastet(false);
       
-      // Marker at brukeren har interagert med bilder (globalt)
       localStorage.setItem('hasSwipedBlomster', 'true');
       setShowSwipeHint(false);
-      
-      // Skjul info-overlay hvis det er åpent
-      if (visInfo) {
-        setVisInfo(false);
-      }
-      
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 300);
     }
   };
 
@@ -233,9 +175,6 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     setBildeFeil(false);
     setDragOffset(0);
     setIsDragging(false);
-    setIsAnimating(false);
-    setTouchStartTime(null);
-    // IKKE reset showSwipeHint - det er globalt
   }, [blomst.artNorsk]);
 
   // Hvis ingen bilder tilgjengelig
