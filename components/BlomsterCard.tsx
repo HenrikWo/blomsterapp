@@ -21,6 +21,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Sjekk om brukeren har swiped før (globalt)
@@ -77,8 +78,8 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   const aktivBildeType = getBildeType(aktivtBilde);
   const erDirekteBilde = ['norskflora-bilde', 'wikipedia-bilde', 'direktebilde'].includes(aktivBildeType);
 
-  // Minimum swipe distance (i piksler)
-  const minSwipeDistance = 50;
+  // Minimum swipe distance (i piksler) - redusert for lettere swipe
+  const minSwipeDistance = 30;
 
   const onTouchStart = (e: React.TouchEvent) => {
     if (!harFlereBilder) return;
@@ -97,7 +98,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    if (!harFlereBilder || !touchStart) return;
+    if (!harFlereBilder || !touchStart || isAnimating) return;
     
     // Forhindre default scroll-oppførsel på mobil
     e.preventDefault();
@@ -106,22 +107,33 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     const diff = currentTouch - touchStart;
     setTouchEnd(currentTouch);
     
-    // Begrens drag-avstanden for bedre UX
-    const maxDrag = 100;
+    // Økt maksimal drag-avstand og mer responsiv følelse
+    const maxDrag = 150;
     const limitedDiff = Math.max(-maxDrag, Math.min(maxDrag, diff));
-    setDragOffset(limitedDiff);
+    
+    // Legg til litt motstand når man drar forbi grensene
+    let finalOffset = limitedDiff;
+    if ((aktivtBildeIndex === 0 && diff > 0) || 
+        (aktivtBildeIndex === gyldigeBilder.length - 1 && diff < 0)) {
+      finalOffset = limitedDiff * 0.3; // Reduser drag-følsomhet ved grensene
+    }
+    
+    setDragOffset(finalOffset);
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd || !harFlereBilder) {
+    if (!touchStart || !touchEnd || !harFlereBilder || isAnimating) {
       setDragOffset(0);
       setIsDragging(false);
       return;
     }
     
+    setIsAnimating(true);
+    
     const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    const velocity = Math.abs(distance) / 100; // Enkel velocity-beregning
+    const isLeftSwipe = distance > minSwipeDistance || (distance > 10 && velocity > 0.5);
+    const isRightSwipe = distance < -minSwipeDistance || (distance < -10 && velocity > 0.5);
 
     if (isLeftSwipe && aktivtBildeIndex < gyldigeBilder.length - 1) {
       setAktivtBildeIndex(prev => prev + 1);
@@ -131,9 +143,13 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       setBildeLastet(false);
     }
     
-    // Reset drag state
+    // Reset drag state med forsinkelse for smooth animasjon
     setDragOffset(0);
     setIsDragging(false);
+    
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 300);
   };
 
   const handleClick = () => {
@@ -147,13 +163,18 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   };
 
   const navigerTilBilde = (index: number) => {
-    if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length) {
+    if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length && !isAnimating) {
+      setIsAnimating(true);
       setAktivtBildeIndex(index);
       setBildeLastet(false);
       
       // Marker at brukeren har interagert med bilder (globalt)
       localStorage.setItem('hasSwipedBlomster', 'true');
       setShowSwipeHint(false);
+      
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 300);
     }
   };
 
@@ -164,6 +185,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
     setBildeFeil(false);
     setDragOffset(0);
     setIsDragging(false);
+    setIsAnimating(false);
     // IKKE reset showSwipeHint - det er globalt
   }, [blomst.artNorsk]);
 
@@ -247,10 +269,10 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       {/* Hovedbilde med drag-effekt */}
       <div className="relative w-full h-full rounded-xl overflow-hidden bg-gray-100">
         <div 
-          className={`relative w-full h-full transition-transform duration-200 ${isDragging ? '' : 'ease-out'}`}
+          className={`relative w-full h-full transition-all duration-300 ${isDragging ? 'duration-0' : 'ease-out'}`}
           style={{ 
             transform: `translateX(${dragOffset}px)`,
-            opacity: isDragging ? 0.8 : 1
+            opacity: isDragging ? 0.9 : 1
           }}
         >
         {!bildeFeil ? (
