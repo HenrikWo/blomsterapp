@@ -225,7 +225,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                     href={blomst.norskfloraUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                    className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     🌿 Norsk Flora
@@ -237,7 +237,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                     href={blomst.wikipediaUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
                     onClick={(e) => e.stopPropagation()}
                   >
                     📖 Wikipedia
@@ -405,6 +405,12 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                 <span className="font-semibold text-emerald-300 flex-shrink-0">Type:</span> 
                 <span className="text-right">{blomst.type}</span>
               </div>
+              {harFlereBilder && (
+                <div className="flex justify-between items-start gap-4">
+                  <span className="font-semibold text-emerald-300 flex-shrink-0">Bilder:</span> 
+                  <span className="text-right">{gyldigeBilder.length} tilgjengelig</span>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-3 mt-6">
@@ -413,7 +419,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                   href={blomst.norskfloraUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                  className="flex-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
                   onClick={(e) => e.stopPropagation()}
                 >
                   🌿 Norsk Flora
@@ -425,7 +431,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                   href={blomst.wikipediaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                  className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg text-sm"
                   onClick={(e) => e.stopPropagation()}
                 >
                   📖 Wikipedia
