@@ -28,7 +28,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
 
   if (!blomst.bildeUrl || blomst.bildeStatus !== 'FUNNET') {
     return (
-      <div className="relative w-full h-96 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center cursor-pointer group transition-all duration-300 hover:scale-105"
+      <div className="relative w-full h-96 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center cursor-pointer group transition-all duration-300"
            onClick={handleClick}>
         <div className="text-center p-6">
           <div className="text-6xl mb-4">🌸</div>
@@ -41,7 +41,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
   }
 
   return (
-    <div className="relative w-full h-96 cursor-pointer group transition-all duration-300 hover:scale-105"
+    <div className="relative w-full h-96 cursor-pointer group transition-all duration-300"
          onClick={handleClick}>
       
       {/* Hovedbilde */}
@@ -88,24 +88,20 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                 <span>{blomst.familienavn}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-semibold text-emerald-300">Slekt:</span> 
-                <span>{blomst.slektNorsk}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold text-emerald-300">Sjikt:</span> 
-                <span>{blomst.sjikt}</span>
+                <span className="font-semibold text-emerald-300">Type:</span> 
+                <span>{blomst.type}</span>
               </div>
             </div>
 
-            {blomst.wikipediaUrl && (
+            {blomst.norskfloraUrl && (
               <a 
-                href={blomst.wikipediaUrl}
+                href={blomst.norskfloraUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block mt-6 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-all duration-200 hover:scale-105 shadow-lg"
                 onClick={(e) => e.stopPropagation()}
               >
-                📖 Les mer på Wikipedia
+                🌿 Les mer på Norsk Flora
               </a>
             )}
             
@@ -116,8 +112,8 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
         </div>
       )}
 
-      {/* Subtil indikator for at man kan trykke */}
-      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+      {/* Subtil indikator for at man kan trykke - synlig på mobil, hover på desktop */}
+      <div className="absolute top-4 right-4 opacity-70 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
         <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-lg">
           <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -125,14 +121,14 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
         </div>
       </div>
 
-      {/* Rapporter feil knapp under bildet */}
+      {/* Rapporter feil knapp - synlig på mobil, hover på desktop */}
       <div className="absolute bottom-3 left-3">
         <button
           onClick={(e) => {
             e.stopPropagation();
             setVisFeilrapport(true);
           }}
-          className="px-3 py-1.5 bg-orange-500/90 hover:bg-orange-600 text-white text-xs font-medium rounded-full transition-all duration-200 opacity-0 group-hover:opacity-100 hover:scale-110 shadow-lg backdrop-blur-sm"
+          className="px-3 py-1.5 bg-orange-500/90 hover:bg-orange-600 text-white text-xs font-medium rounded-full transition-all duration-200 opacity-70 md:opacity-0 md:group-hover:opacity-100 hover:scale-110 shadow-lg backdrop-blur-sm"
           title="Rapporter feil med dette bildet eller informasjonen"
         >
           🚨 Feil?

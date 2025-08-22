@@ -25,17 +25,21 @@ export async function loadBlomsterData(): Promise<BlomsterData> {
       console.warn('CSV parsing errors:', parseResult.errors);
     }
 
-    // Konverter til vårt format
+    // Konverter til vårt format (nytt CSV format)
     const blomster: Blomst[] = parseResult.data
       .map((row: any) => ({
-        familienavn: row['Familienavn'] || '',
-        vitenskapeligNavn: row['Vitenskapelig navn'] || '',
-        slektNorsk: row['Slekt - Norsk'] || '',
-        artNorsk: row['Art - Norsk'] || '',
-        sjikt: row['Sjikt'] || '',
+        artNorsk: row['Norsk navn'] || '',
+        vitenskapeligNavn: row['Latinsk navn'] || '',
+        familienavn: row['Familie'] || '',
+        type: row['Type'] || '',
         bildeUrl: row['bilde_url'] || '',
-        wikipediaUrl: row['wikipedia_url'] || '',
-        bildeStatus: row['bilde_status'] as 'FUNNET' | 'IKKE_FUNNET' | 'MANGLER_NAVN' || 'IKKE_FUNNET'
+        norskfloraUrl: row['norskflora_url'] || '',
+        bildeStatus: row['bilde_status'] as 'FUNNET' | 'IKKE_FUNNET' | 'MANGLER_NAVN' || 'IKKE_FUNNET',
+        
+        // For bakoverkompatibilitet - sett deprecated fields
+        slektNorsk: row['Type'] || '', // Bruker Type som slekt
+        sjikt: row['Type'] || '',      // Bruker Type som sjikt
+        wikipediaUrl: row['norskflora_url'] || '' // Bruker norskflora som wikipedia
       }))
       .filter((blomst: Blomst) => blomst.artNorsk.trim() !== ''); // Fjern tomme rader
 
@@ -92,6 +96,6 @@ export function søkBlomster(blomster: Blomst[], søketerm: string): Blomst[] {
     blomst.artNorsk.toLowerCase().includes(term) ||
     blomst.vitenskapeligNavn.toLowerCase().includes(term) ||
     blomst.familienavn.toLowerCase().includes(term) ||
-    blomst.slektNorsk.toLowerCase().includes(term)
+    blomst.type.toLowerCase().includes(term) // Oppdatert til å bruke 'type' i stedet for slektNorsk
   );
 }
