@@ -180,6 +180,11 @@ export default function TestDegSelv() {
     
     setValgtSvar(valgtAlternativ);
     
+    // Fjern focus fra alle knapper for å resette hover/focus-states
+    if (document.activeElement && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    
     const gjeldende = quiz[gjeldendespørsmål];
     const nyttSvar: QuizSvar = {
       spørsmålIndex: gjeldendespørsmål,
@@ -197,6 +202,12 @@ export default function TestDegSelv() {
         setValgtSvar(null);
         setTimeout(() => {
           setGjeldendespørsmål(prev => prev + 1);
+          // Fjern focus igjen etter spørsmålsbytte
+          setTimeout(() => {
+            if (document.activeElement && document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+          }, 50);
         }, 100);
       } else {
         // Quiz ferdig
@@ -511,6 +522,8 @@ export default function TestDegSelv() {
                     onClick={() => handleSvar(alternativ)}
                     disabled={valgtSvar !== null}
                     className={buttonClass}
+                    onBlur={(e) => e.target.style.backgroundColor = ''} // Reset background på blur
+                    style={{ WebkitTapHighlightColor: 'transparent' }} // Fjern tap-highlight på mobil
                   >
                     <span className="font-bold mr-3">
                       {String.fromCharCode(65 + index)}.
