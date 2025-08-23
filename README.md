@@ -1,36 +1,176 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌸 Blomsterappen
 
-## Getting Started
+> *En visuell reise gjennom Norges vakre blomsterverden*
 
-First, run the development server:
+En moderne, interaktiv app som kombinerer **Norsk Flora** og **Wikipedia** for å skape den ultimate blomsterlæringen. Oppdag, lær og test deg selv på over tusen norske blomster med høykvalitets bilder og detaljert informasjon.
 
+![Blomsterapp Banner](https://img.shields.io/badge/🌸_Blomster-Norges_Flora-green?style=for-the-badge)
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![Tailwind](https://img.shields.io/badge/Tailwind-CSS-teal?style=for-the-badge&logo=tailwindcss)
+
+---
+
+## ✨ Funksjoner
+
+### 🔍 **Interaktiv Blomsterutforsking**
+- **Swipe-funksjonalitet** på mobil for å navigere mellom flere bilder
+- **Smooth drag-feedback** med visuell respons
+- **Dual bildekilde** - både Norsk Flora og Wikipedia-bilder
+- **Touch-optimalisert** for perfekt mobilopplevelse
+
+### 🧠 **Smart Quiz-system**
+- **Adaptiv quiz** som bruker alle tilgjengelige bilder
+- **Visuell feedback** på riktige og feil svar
+- **Progresstracking** med detaljert resultatomoversikt
+- **Swipable bilder** også i quiz-modus
+
+### 📱 **Responsiv Design**
+- **Mobile-first** tilnærming med perfekt touch-handling
+- **Glassmorphism** effekter og moderne UI
+- **Smooth animasjoner** og mikrointeraksjoner
+- **Accessibility-fokusert** med ARIA-labels og keyboard-navigasjon
+
+### 📊 **Datadrevet**
+- **1000+ blomster** fra norsk flora
+- **Automatisk datasynkronisering** mellom Norsk Flora og Wikipedia
+- **Smart bildefiltrering** som sikrer kun høykvalitets innhold
+- **CSV-basert database** for enkel vedlikehold
+
+---
+
+## 🚀 Kom i gang
+
+### Forutsetninger
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Node.js 18+ og npm/yarn/pnpm
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installasjon
+```bash
+# Klon prosjektet
+git clone [repository-url]
+cd blomsterapp
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Installer dependencies
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Start utviklingsserver
+npm run dev
+```
 
-## Learn More
+Åpne [http://localhost:3000](http://localhost:3000) i nettleseren din og opplev blomsterverdenen! 🌺
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Teknisk Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontend
+- **Next.js 14** - React framework med App Router
+- **TypeScript** - Type-sikker utvikling
+- **Tailwind CSS** - Utility-first styling
+- **Lucide React** - Moderne ikoner
 
-## Deploy on Vercel
+### Funksjoner
+- **Touch Events** - Native swipe-funksjonalitet
+- **Image Optimization** - Next.js automatisk bildeoptimasering
+- **State Management** - React hooks og context
+- **Responsive Design** - Mobile-first tilnærming
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Data
+- **CSV Processing** - Papa Parse for datahåndtering
+- **Dual Sources** - Norsk Flora + Wikipedia integration
+- **Smart Caching** - Optimalisert datalasting
+- **Error Handling** - Robust feilhåndtering
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📁 Prosjektstruktur
+
+```
+blomsterapp/
+├── 🎨 components/          # React komponenter
+│   ├── BlomsterCard.tsx    # Hovedkort med swipe-funksjonalitet
+│   └── FeilrapportModal.tsx # Feilrapportering
+├── 📚 lib/                 # Utilities og typer
+│   ├── types.ts           # TypeScript interfaces
+│   ├── data-loader.ts     # CSV data-håndtering
+│   └── quizTypes.ts       # Quiz logikk
+├── 🌐 app/                 # Next.js App Router
+│   ├── page.tsx           # Hovedside
+│   ├── quiz/              # Quiz-funksjonalitet
+│   └── layout.tsx         # Global layout
+└── 📊 public/data/        # CSV database
+    └── blomster.csv       # Blomsterdata
+```
+
+---
+
+## 🎮 Brukerveiledning
+
+### 🔍 **Utforsk blomster**
+- **Tap** på et kort for å se detaljert informasjon
+- **Swipe** horisontalt for å se flere bilder av samme blomst
+- **Klikk** på lenkene for å utforske Norsk Flora eller Wikipedia
+
+### 🧠 **Ta quiz**
+- Trykk på "Test deg selv" fra hovedsiden
+- **Swipe** gjennom bildene hvis blomsten har flere
+- **Velg** riktig svar fra alternativene
+- **Se** detaljert resultat med poengsum og gjennomgang
+
+### 📱 **Mobil vs Desktop**
+- **Mobil**: Swipe-gester, touch-optimalisert, alltid synlige kontroller
+- **Desktop**: Hover-effekter, pil-navigasjon, mus-optimalisert
+
+---
+
+## 🎨 Design Philosophy
+
+### 🌿 **Naturinspirert**
+Fargepalettet er inspirert av norsk natur - smaragdgrønt fra skog, teal fra fjorder, og rene hvite toner fra snø og blomster.
+
+### 📱 **Mobile-First**
+Hver interaksjon er designet for å føles naturlig på touch-enheter, med smooth animasjoner og responsiv feedback.
+
+### ✨ **Modern Minimalism**
+Rent design som lar blomsternes skjønnhet skinne gjennom, med subtile glassmorphism-effekter og gjennomtenkte mikrointeraksjoner.
+
+---
+
+## 🤝 Bidra
+
+Vi ønsker bidrag velkommen! Se vår [bidragsguide](CONTRIBUTING.md) for hvordan du kan hjelpe til med å gjøre blomsterappen enda bedre.
+
+### 🐛 Rapporter feil
+Bruker du "🚨 Feil?"-knappen i appen eller opprett en issue på GitHub.
+
+### 💡 Foreslå funksjoner  
+Har du en idé? Del den med oss i discussions eller issues.
+
+---
+
+## 📄 Lisens
+
+Dette prosjektet er lisensiert under MIT-lisensen. Se [LICENSE](LICENSE) for detaljer.
+
+---
+
+## 🙏 Anerkjennelser
+
+- **[Norsk Flora](https://norskflora.no)** - For den utrolige botaniske databasen
+- **[Wikipedia](https://wikipedia.org)** - For høykvalitets blomsterbilder
+- **[Next.js](https://nextjs.org)** - For det fantastiske React-rammeverket
+- **[Tailwind CSS](https://tailwindcss.com)** - For effektiv og vakker styling
+
+---
+
+<div align="center">
+
+**Laget med 💚 for norsk natur**
+
+*Opplev blomsterverdenen på en helt ny måte*
+
+![Blomster](https://img.shields.io/badge/🌸🌼🌺-Blomster-brightgreen?style=for-the-badge)
+
+</div>
