@@ -4,11 +4,6 @@
 
 En moderne, interaktiv app som kombinerer **Norsk Flora** og **Wikipedia** for å skape den ultimate blomsterlæringen. Oppdag, lær og test deg selv på over tusen norske blomster med høykvalitets bilder og detaljert informasjon.
 
-![Blomsterapp Banner](https://img.shields.io/badge/🌸_Blomster-Norges_Flora-green?style=for-the-badge)
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Tailwind](https://img.shields.io/badge/Tailwind-CSS-teal?style=for-the-badge&logo=tailwindcss)
-
 ---
 
 ## ✨ Funksjoner
@@ -32,7 +27,7 @@ En moderne, interaktiv app som kombinerer **Norsk Flora** og **Wikipedia** for �
 - **Accessibility-fokusert** med ARIA-labels og keyboard-navigasjon
 
 ### 📊 **Datadrevet**
-- **1000+ blomster** fra norsk flora
+- **Alle blomster** fra norsk flora
 - **Automatisk datasynkronisering** mellom Norsk Flora og Wikipedia
 - **Smart bildefiltrering** som sikrer kun høykvalitets innhold
 - **CSV-basert database** for enkel vedlikehold
@@ -140,19 +135,11 @@ Rent design som lar blomsternes skjønnhet skinne gjennom, med subtile glassmorp
 
 ## 🤝 Bidra
 
-Vi ønsker bidrag velkommen! Se vår [bidragsguide](CONTRIBUTING.md) for hvordan du kan hjelpe til med å gjøre blomsterappen enda bedre.
-
 ### 🐛 Rapporter feil
 Bruker du "🚨 Feil?"-knappen i appen eller opprett en issue på GitHub.
 
 ### 💡 Foreslå funksjoner  
 Har du en idé? Del den med oss i discussions eller issues.
-
----
-
-## 📄 Lisens
-
-Dette prosjektet er lisensiert under MIT-lisensen. Se [LICENSE](LICENSE) for detaljer.
 
 ---
 
@@ -167,10 +154,8 @@ Dette prosjektet er lisensiert under MIT-lisensen. Se [LICENSE](LICENSE) for det
 
 <div align="center">
 
-**Laget med 💚 for norsk natur**
+**Laget til Vilde 💚**
 
-*Opplev blomsterverdenen på en helt ny måte*
-
-![Blomster](https://img.shields.io/badge/🌸🌼🌺-Blomster-brightgreen?style=for-the-badge)
+*For å bestå vanskelige fag*
 
 </div>
