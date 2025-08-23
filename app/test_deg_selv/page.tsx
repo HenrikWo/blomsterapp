@@ -500,30 +500,58 @@ export default function TestDegSelv() {
 
             <div className="grid grid-cols-1 gap-3">
               {gjeldende.alternativer.map((alternativ, index) => {
-                let buttonClass = "w-full p-4 text-left border-2 rounded-xl font-medium transition-all duration-200 ";
+                // Bestem styling basert på state
+                let styling = {
+                  backgroundColor: '',
+                  borderColor: '',
+                  color: '',
+                };
+                
+                let baseClasses = "w-full p-4 text-left border-2 rounded-xl font-medium transition-all duration-200 ";
                 
                 if (valgtSvar) {
                   // Quiz er besvart
                   if (alternativ === gjeldende.riktigSvar) {
-                    buttonClass += "border-green-500 bg-green-100 text-green-800"; // Riktig svar
+                    styling = {
+                      backgroundColor: 'rgb(220 252 231)', // green-100
+                      borderColor: 'rgb(34 197 94)', // green-500
+                      color: 'rgb(22 101 52)', // green-800
+                    };
                   } else if (alternativ === valgtSvar) {
-                    buttonClass += "border-red-500 bg-red-100 text-red-800"; // Feil valg
+                    styling = {
+                      backgroundColor: 'rgb(254 226 226)', // red-100
+                      borderColor: 'rgb(239 68 68)', // red-500
+                      color: 'rgb(153 27 27)', // red-800
+                    };
                   } else {
-                    buttonClass += "border-gray-300 bg-gray-50 text-gray-500"; // Andre alternativer
+                    styling = {
+                      backgroundColor: 'rgb(249 250 251)', // gray-50
+                      borderColor: 'rgb(209 213 219)', // gray-300
+                      color: 'rgb(107 114 128)', // gray-500
+                    };
                   }
+                  baseClasses += "cursor-default";
                 } else {
-                  // Kan fortsatt svare
-                  buttonClass += "border-emerald-300 bg-white hover:border-emerald-500 hover:bg-emerald-50 text-emerald-800 hover:scale-102 cursor-pointer";
+                  // Kan fortsatt svare - TVUNGEN reset til default
+                  styling = {
+                    backgroundColor: 'white',
+                    borderColor: 'rgb(110 231 183)', // emerald-300
+                    color: 'rgb(6 95 70)', // emerald-800
+                  };
+                  baseClasses += "hover:border-emerald-500 hover:bg-emerald-50 hover:scale-102 cursor-pointer";
                 }
 
                 return (
                   <button
-                    key={`${gjeldendespørsmål}-${index}-${alternativ}`} // Unik key per spørsmål
+                    key={`q${gjeldendespørsmål}-opt${index}`} // Kortere, men unik key
                     onClick={() => handleSvar(alternativ)}
                     disabled={valgtSvar !== null}
-                    className={buttonClass}
-                    onBlur={(e) => e.target.style.backgroundColor = ''} // Reset background på blur
-                    style={{ WebkitTapHighlightColor: 'transparent' }} // Fjern tap-highlight på mobil
+                    className={baseClasses}
+                    style={{
+                      ...styling,
+                      WebkitTapHighlightColor: 'transparent',
+                      outline: 'none',
+                    }}
                   >
                     <span className="font-bold mr-3">
                       {String.fromCharCode(65 + index)}.
