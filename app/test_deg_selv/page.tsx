@@ -194,7 +194,10 @@ export default function TestDegSelv() {
     setTimeout(() => {
       if (gjeldendespørsmål < quiz.length - 1) {
         setGjeldendespørsmål(prev => prev + 1);
-        setValgtSvar(null);
+        // Reset valgtSvar ETTER at vi har gått til neste spørsmål
+        setTimeout(() => {
+          setValgtSvar(null);
+        }, 50);
       } else {
         // Quiz ferdig
         avsluttQuiz([...svar, nyttSvar]);
@@ -228,6 +231,9 @@ export default function TestDegSelv() {
       setValgtSvar(null);
       setVisResultat(false);
       setQuizResultat(null);
+      setAktivtBildeIndex(0);
+      setDragOffset(0);
+      setIsDragging(false);
     }
   };
 
