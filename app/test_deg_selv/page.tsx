@@ -193,11 +193,11 @@ export default function TestDegSelv() {
     // Gå videre etter 1.5 sekunder
     setTimeout(() => {
       if (gjeldendespørsmål < quiz.length - 1) {
-        setGjeldendespørsmål(prev => prev + 1);
-        // Reset valgtSvar ETTER at vi har gått til neste spørsmål
+        // Reset valgtSvar FØRST, så bytt spørsmål
+        setValgtSvar(null);
         setTimeout(() => {
-          setValgtSvar(null);
-        }, 50);
+          setGjeldendespørsmål(prev => prev + 1);
+        }, 100);
       } else {
         // Quiz ferdig
         avsluttQuiz([...svar, nyttSvar]);
@@ -507,7 +507,7 @@ export default function TestDegSelv() {
 
                 return (
                   <button
-                    key={index}
+                    key={`${gjeldendespørsmål}-${index}-${alternativ}`} // Unik key per spørsmål
                     onClick={() => handleSvar(alternativ)}
                     disabled={valgtSvar !== null}
                     className={buttonClass}
