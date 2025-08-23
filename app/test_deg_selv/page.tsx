@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,6 +21,17 @@ export default function TestDegSelv() {
   const [laster, setLaster] = useState(true);
   const [feil, setFeil] = useState<string | null>(null);
   const [bildeLastet, setBildeLastet] = useState(false);
+  
+  // Swipe-relaterte states
+  const [aktivtBildeIndex, setAktivtBildeIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Minimum swipe distance
+  const minSwipeDistance = 30;
 
   // Last data og generer quiz
   useEffect(() => {
@@ -44,10 +55,125 @@ export default function TestDegSelv() {
     initQuiz();
   }, []);
 
-  // Reset bilde-loading når nytt spørsmål
+  // Reset bilde-loading og swipe state når nytt spørsmål
   useEffect(() => {
     setBildeLastet(false);
+    setAktivtBildeIndex(0);
+    setDragOffset(0);
+    setIsDragging(false);
   }, [gjeldendespørsmål]);
+
+  // Swipe handlers
+  const onTouchStart = (e: React.TouchEvent) => {
+    const gjeldende = quiz[gjeldendespørsmål];
+    const gyldigeBilder = gjeldende?.blomst.bildeUrls?.filter(url => 
+      url && url.trim() !== '' && 
+      (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || 
+       url.includes('.webp') || url.includes('.gif') || url.includes('wikimedia.org') || 
+       url.includes('wikipedia.org'))
+    ) || [];
+    
+    if (gyldigeBilder.length <= 1) return;
+    
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsDragging(true);
+    setDragOffset(0);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    const gjeldende = quiz[gjeldendespørsmål];
+    const gyldigeBilder = gjeldende?.blomst.bildeUrls?.filter(url => 
+      url && url.trim() !== '' && 
+      (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || 
+       url.includes('.webp') || url.includes('.gif') || url.includes('wikimedia.org') || 
+       url.includes('wikipedia.org'))
+    ) || [];
+
+    if (gyldigeBilder.length <= 1 || !touchStart) return;
+    
+    e.preventDefault();
+    
+    const currentTouch = e.targetTouches[0].clientX;
+    const diff = currentTouch - touchStart;
+    setTouchEnd(currentTouch);
+    
+    const maxDrag = 150;
+    const limitedDiff = Math.max(-maxDrag, Math.min(maxDrag, diff));
+    
+    let finalOffset = limitedDiff;
+    if ((aktivtBildeIndex === 0 && diff > 0) || 
+        (aktivtBildeIndex === gyldigeBilder.length - 1 && diff < 0)) {
+      finalOffset = limitedDiff * 0.3;
+    }
+    
+    setDragOffset(finalOffset);
+  };
+
+  const onTouchEnd = () => {
+    const gjeldende = quiz[gjeldendespørsmål];
+    const gyldigeBilder = gjeldende?.blomst.bildeUrls?.filter(url => 
+      url && url.trim() !== '' && 
+      (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || 
+       url.includes('.webp') || url.includes('.gif') || url.includes('wikimedia.org') || 
+       url.includes('wikipedia.org'))
+    ) || [];
+
+    if (gyldigeBilder.length <= 1) {
+      setDragOffset(0);
+      setIsDragging(false);
+      return;
+    }
+
+    if (!touchStart || !touchEnd) {
+      setDragOffset(0);
+      setIsDragging(false);
+      return;
+    }
+    
+    const distance = touchStart - touchEnd;
+    const velocity = Math.abs(distance) / 100;
+    const isLeftSwipe = distance > minSwipeDistance || (distance > 10 && velocity > 0.5);
+    const isRightSwipe = distance < -minSwipeDistance || (distance < -10 && velocity > 0.5);
+
+    if (isLeftSwipe && aktivtBildeIndex < gyldigeBilder.length - 1) {
+      setAktivtBildeIndex(prev => prev + 1);
+      setBildeLastet(false);
+    } else if (isRightSwipe && aktivtBildeIndex > 0) {
+      setAktivtBildeIndex(prev => prev - 1);
+      setBildeLastet(false);
+    }
+    
+    setDragOffset(0);
+    setIsDragging(false);
+  };
+
+  const navigerTilBilde = (index: number, e?: React.MouseEvent) => {
+    const gjeldende = quiz[gjeldendespørsmål];
+    const gyldigeBilder = gjeldende?.blomst.bildeUrls?.filter(url => 
+      url && url.trim() !== '' && 
+      (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || 
+       url.includes('.webp') || url.includes('.gif') || url.includes('wikimedia.org') || 
+       url.includes('wikipedia.org'))
+    ) || [];
+
+    if (index !== aktivtBildeIndex && index >= 0 && index < gyldigeBilder.length) {
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      
+      setAktivtBildeIndex(index);
+      setBildeLastet(false);
+    }
+  };
+
+  const getBildeLabel = (url: string) => {
+    if (url.includes('wikimedia.org') || url.includes('wikipedia.org')) {
+      return 'Wikipedia bilde';
+    }
+    return 'Norsk Flora bilde';
+  };
 
   const handleSvar = (valgtAlternativ: string) => {
     if (valgtSvar) return; // Allerede svart
@@ -209,6 +335,15 @@ export default function TestDegSelv() {
 
   // Quiz screen
   const gjeldende = quiz[gjeldendespørsmål];
+  const gyldigeBilder = gjeldende?.blomst.bildeUrls?.filter(url => 
+    url && url.trim() !== '' && 
+    (url.includes('.jpg') || url.includes('.png') || url.includes('.jpeg') || 
+     url.includes('.webp') || url.includes('.gif') || url.includes('wikimedia.org') || 
+     url.includes('wikipedia.org'))
+  ) || [];
+  
+  const harFlereBilder = gyldigeBilder.length > 1;
+  const aktivtBilde = gyldigeBilder[aktivtBildeIndex] || gjeldende.blomst.bildeUrl;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50 py-8">
@@ -240,22 +375,102 @@ export default function TestDegSelv() {
         {/* Spørsmål */}
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden mb-8">
           
-          {/* Bilde */}
-          <div className="relative h-80 bg-gradient-to-br from-emerald-50 to-teal-50">
-            <Image
-              src={gjeldende.blomst.bildeUrl}
-              alt="Gjett blomsten"
-              fill
-              className={`transition-opacity duration-500 ${bildeLastet ? 'opacity-100' : 'opacity-0'}`}
-              style={{ objectFit: 'contain' }}
-              onLoad={() => setBildeLastet(true)}
-              unoptimized
-              priority
-            />
+          {/* Bilde med swipe-funksjonalitet */}
+          <div 
+            ref={containerRef}
+            className="relative h-80 bg-gradient-to-br from-emerald-50 to-teal-50"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            style={{ touchAction: harFlereBilder ? 'none' : 'auto' }}
+          >
+            <div 
+              className={`relative w-full h-full transition-all duration-300 ${isDragging ? 'duration-0' : 'ease-out'}`}
+              style={{ 
+                transform: `translateX(${dragOffset}px)`,
+                opacity: isDragging ? 0.9 : 1
+              }}
+            >
+              <Image
+                key={`quiz-${gjeldendespørsmål}-${aktivtBildeIndex}`}
+                src={aktivtBilde}
+                alt="Gjett blomsten"
+                fill
+                className={`transition-opacity duration-500 ${bildeLastet ? 'opacity-100' : 'opacity-0'}`}
+                style={{ objectFit: 'contain' }}
+                onLoad={() => setBildeLastet(true)}
+                unoptimized
+                priority
+              />
+            </div>
             
             {!bildeLastet && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+              </div>
+            )}
+
+            {/* Navigasjonspiler for flere bilder */}
+            {harFlereBilder && bildeLastet && (
+              <>
+                {/* Venstre pil */}
+                {aktivtBildeIndex > 0 && (
+                  <button
+                    onClick={(e) => navigerTilBilde(aktivtBildeIndex - 1, e)}
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 md:opacity-0 md:group-hover:opacity-100 opacity-60 z-10"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Høyre pil */}
+                {aktivtBildeIndex < gyldigeBilder.length - 1 && (
+                  <button
+                    onClick={(e) => navigerTilBilde(aktivtBildeIndex + 1, e)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-200 md:opacity-0 md:group-hover:opacity-100 opacity-60 z-10"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* Bildeindikatorer */}
+            {harFlereBilder && (
+              <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-1 z-10">
+                {gyldigeBilder.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      navigerTilBilde(index);
+                    }}
+                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                      index === aktivtBildeIndex 
+                        ? 'bg-white scale-125' 
+                        : 'bg-white/50 hover:bg-white/75'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Swipe-indikator for mobile */}
+            {harFlereBilder && (
+              <div className="absolute top-3 left-1/2 transform -translate-x-1/2 md:hidden z-10">
+                <div className={`bg-black/50 text-white text-xs px-2 py-1 rounded-full transition-all duration-200 ${isDragging ? 'scale-110 bg-black/70' : ''}`}>
+                  {getBildeLabel(aktivtBilde)} ({aktivtBildeIndex + 1}/{gyldigeBilder.length})
+                  {isDragging && (
+                    <span className="ml-1">
+                      {dragOffset > 0 ? '👈' : dragOffset < 0 ? '👉' : ''}
+                    </span>
+                  )}
+                </div>
               </div>
             )}
           </div>
