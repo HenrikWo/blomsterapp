@@ -9,18 +9,18 @@ const config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Dyp skogsgrønn - hovedfargen
+        // Skogsgrønn - hovedfargen
         skog: {
-          50: "#F2F5F2",
-          100: "#E3EAE5",
-          200: "#C6D5CB",
-          300: "#9DB8A6",
-          400: "#6D9179",
-          500: "#4A7358",
-          600: "#365A43",
-          700: "#2A4735",
-          800: "#1F3527",
-          900: "#16261C",
+          50: "#F2F7F3",
+          100: "#E1EDE5",
+          200: "#C3DACB",
+          300: "#9BC1A9",
+          400: "#6BA283",
+          500: "#4C8865",
+          600: "#40795A",
+          700: "#346249",
+          800: "#294C39",
+          900: "#1C3427",
         },
         // Varm nøytral - bakgrunn og tekst
         sand: {

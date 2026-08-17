@@ -126,7 +126,8 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <h1 className="text-2xl font-semibold text-skog-800 tracking-tight">
+              <h1 className="text-2xl font-semibold text-skog-800 tracking-tight flex items-center gap-2">
+                <span aria-hidden="true">🌿</span>
                 PlantePugger
               </h1>
               <p className="text-sm text-sand-600 mt-0.5 tabular-nums">
