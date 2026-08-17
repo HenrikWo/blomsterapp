@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import BlomsterCard from '@/components/BlomsterCard';
+import UtvalgModal from '@/components/UtvalgModal';
 import { loadBlomsterData, getTilfeldigBlomst } from '@/lib/blomsterData';
+import { lesFravalgte, skrivFravalgte, brukbareBlomster } from '@/lib/utvalg';
 import type { Blomst, BlomsterData } from '@/lib/types';
 
 export default function Home() {
@@ -11,19 +13,22 @@ export default function Home() {
   const [gjeldendeBlomt, setGjeldendeBlomt] = useState<Blomst | null>(null);
   const [laster, setLaster] = useState(true);
   const [feil, setFeil] = useState<string | null>(null);
+  const [fravalgte, setFravalgte] = useState<Set<string>>(new Set());
+  const [visUtvalg, setVisUtvalg] = useState(false);
 
   // Last blomsterdata ved oppstart
   useEffect(() => {
     async function initApp() {
       try {
         setLaster(true);
+        const lagret = lesFravalgte();
+        setFravalgte(lagret);
+
         const data = await loadBlomsterData();
         setBlomsterData(data);
-        
-        // Vis første tilfeldige blomst
-        const førsteBlomt = getTilfeldigBlomst(data.blomster);
-        setGjeldendeBlomt(førsteBlomt);
-        
+
+        // Vis første tilfeldige blomst fra utvalget
+        setGjeldendeBlomt(getTilfeldigBlomst(brukbareBlomster(data.blomster, lagret)));
       } catch (error) {
         console.error('Feil ved lasting:', error);
         setFeil('Kunne ikke laste blomsterdata. Sjekk at blomster.csv ligger i public/data/');
@@ -35,20 +40,43 @@ export default function Home() {
     initApp();
   }, []);
 
+  const valgte = useMemo(
+    () => (blomsterData ? brukbareBlomster(blomsterData.blomster, fravalgte) : []),
+    [blomsterData, fravalgte]
+  );
+
   const visNyBlomt = () => {
-    if (!blomsterData) return;
-    
-    const nyBlomt = getTilfeldigBlomst(blomsterData.blomster);
-    setGjeldendeBlomt(nyBlomt);
+    if (valgte.length === 0) return;
+    // Unngå å trekke samme art to ganger på rad når det er nok å velge i
+    let ny = getTilfeldigBlomst(valgte);
+    if (valgte.length > 1) {
+      for (let i = 0; i < 5 && ny?.artNorsk === gjeldendeBlomt?.artNorsk; i++) {
+        ny = getTilfeldigBlomst(valgte);
+      }
+    }
+    setGjeldendeBlomt(ny);
+  };
+
+  const lagreUtvalg = (nyeFravalgte: Set<string>) => {
+    setFravalgte(nyeFravalgte);
+    skrivFravalgte(nyeFravalgte);
+    setVisUtvalg(false);
+
+    if (blomsterData) {
+      const nyttUtvalg = brukbareBlomster(blomsterData.blomster, nyeFravalgte);
+      // Står vi på en art som nettopp ble huket av, bytt til en som er med
+      const fortsattMed = nyttUtvalg.some((b) => b.artNorsk === gjeldendeBlomt?.artNorsk);
+      if (!fortsattMed) setGjeldendeBlomt(getTilfeldigBlomst(nyttUtvalg));
+    }
   };
 
   // Loading state
   if (laster) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-sand-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mx-auto mb-4"></div>
-          <p className="text-lg text-green-700">Laster blomsterdata...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-skog-600 mx-auto mb-4"></div>
+          <p className="text-sand-600">Laster blomsterdata…</p>
         </div>
       </div>
     );
@@ -57,16 +85,18 @@ export default function Home() {
   // Error state
   if (feil) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen bg-sand-100 flex items-center justify-center">
         <div className="text-center max-w-md p-6">
-          <div className="text-6xl mb-4">🚫</div>
-          <h1 className="text-2xl font-bold text-red-800 mb-4">Oops!</h1>
-          <p className="text-red-600 mb-4">{feil}</p>
-          <div className="text-sm text-red-500 bg-red-100 rounded-lg p-3">
-            <p><strong>Slik fikser du det:</strong></p>
-            <ol className="list-decimal list-inside mt-2 space-y-1">
-              <li>Kopier <code>blomster_med_bilder.csv</code> til <code>public/data/blomster.csv</code></li>
-              <li>Refresh siden</li>
+          <h1 className="text-2xl font-semibold text-galt-tekst mb-3">Noe gikk galt</h1>
+          <p className="text-sand-700 mb-4">{feil}</p>
+          <div className="text-sm text-sand-700 bg-galt-bg border border-galt-kant rounded p-4 text-left">
+            <p className="font-semibold mb-2">Slik fikser du det:</p>
+            <ol className="list-decimal list-inside space-y-1">
+              <li>
+                Kopier <code className="bg-white px-1 rounded">blomster_med_bilder.csv</code> til{' '}
+                <code className="bg-white px-1 rounded">public/data/blomster.csv</code>
+              </li>
+              <li>Last siden på nytt</li>
             </ol>
           </div>
         </div>
@@ -77,88 +107,107 @@ export default function Home() {
   // No data
   if (!blomsterData || blomsterData.blomster.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center">
+      <div className="min-h-screen bg-sand-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-6xl mb-4">🌸</div>
-          <h1 className="text-2xl font-bold text-orange-800 mb-4">Ingen blomster funnet</h1>
-          <p className="text-orange-600">CSV-filen ser ut til å være tom.</p>
+          <h1 className="text-2xl font-semibold text-sand-800 mb-2">Ingen blomster funnet</h1>
+          <p className="text-sand-600">CSV-filen ser ut til å være tom.</p>
         </div>
       </div>
     );
   }
 
-  // Main app
+  const totaltMedBilde = blomsterData.medBilder;
+  const harFiltrert = valgte.length !== totaltMedBilde;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <div className="min-h-screen bg-sand-100">
       {/* Header */}
-      <header className="bg-white/70 backdrop-blur-md border-b border-emerald-200/50 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-3">
-                🌿 PlantePugger
+      <header className="bg-white border-b border-sand-200 sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-semibold text-skog-800 tracking-tight">
+                PlantePugger
               </h1>
-              <p className="text-sm text-emerald-700/80 mt-1">
-                {blomsterData.medBilder} av {blomsterData.totalAntall} blomster med bilder
+              <p className="text-sm text-sand-600 mt-0.5 tabular-nums">
+                {harFiltrert ? (
+                  <>
+                    {valgte.length} av {totaltMedBilde} arter valgt
+                  </>
+                ) : (
+                  <>{totaltMedBilde} arter</>
+                )}
               </p>
             </div>
-            
-            <Link
-            href="/test_deg_selv"
-            className="px-4 py-3 md:px-8 md:py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 shadow-md whitespace-nowrap text-center inline-block"
-          >
-            🧠 Test deg selv
-          </Link>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setVisUtvalg(true)}
+                className="px-3 py-2.5 text-sm font-medium text-skog-700 bg-white border border-skog-300 rounded hover:bg-skog-50 transition-colors tabular-nums"
+              >
+                Velg arter
+                {harFiltrert && (
+                  <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-skog-600 text-white rounded">
+                    {valgte.length}
+                  </span>
+                )}
+              </button>
+
+              <Link
+                href="/test_deg_selv"
+                className="px-4 py-2.5 bg-skog-600 hover:bg-skog-700 text-white rounded text-sm font-semibold transition-colors whitespace-nowrap"
+              >
+                Test deg selv
+              </Link>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="max-w-2xl mx-auto px-4 py-12">
+      <main className="max-w-2xl mx-auto px-4 py-10">
         {gjeldendeBlomt ? (
-          <div className="space-y-8">
-            <BlomsterCard 
-              blomst={gjeldendeBlomt}
-              onClick={() => {/* Info vises i kortet selv */}}
-            />
-            
-            {/* Ny blomst knapp under bildet */}
-            <div className="text-center">
-              <button
-                onClick={visNyBlomt}
-                className="w-full px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 shadow-md"
-              >
-                🎲 Ny blomst
-              </button>
-            </div>
-            
-            {/* Instructions */}
-            <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-2xl border border-emerald-100/50 shadow-sm">
-              <p className="text-emerald-800 font-medium text-lg">
-                💡 Trykk på bildet for å se informasjon
-              </p>
-              <p className="text-emerald-600 mt-2">
-                Eller trykk "Ny blomst" for en tilfeldig art
-              </p>
-            </div>
+          <div className="space-y-6">
+            <BlomsterCard blomst={gjeldendeBlomt} onClick={() => {}} />
+
+            <button
+              onClick={visNyBlomt}
+              className="w-full px-8 py-3.5 bg-skog-600 hover:bg-skog-700 text-white rounded font-semibold transition-colors"
+            >
+              Ny blomst
+            </button>
+
+            <p className="text-center text-sm text-sand-600">
+              Trykk på bildet for å se navn og familie.
+            </p>
           </div>
         ) : (
-          <div className="text-center p-12 bg-white/60 backdrop-blur-sm rounded-2xl">
-            <div className="text-6xl mb-6">🤔</div>
-            <h2 className="text-xl font-bold text-gray-700 mb-3">
-              Ingen blomster med bilder funnet
-            </h2>
-            <p className="text-gray-600">
-              Det ser ut som ingen av blomstene har fungerende bildelinker.
+          <div className="text-center p-10 bg-white border border-sand-200 rounded">
+            <h2 className="text-lg font-semibold text-sand-800 mb-2">Ingen arter i utvalget</h2>
+            <p className="text-sand-600 mb-5">
+              Du har huket av alle artene. Legg til noen for å komme i gang.
             </p>
+            <button
+              onClick={() => setVisUtvalg(true)}
+              className="px-5 py-2.5 bg-skog-600 hover:bg-skog-700 text-white rounded font-semibold transition-colors"
+            >
+              Velg arter
+            </button>
           </div>
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="text-center py-8 text-emerald-700/80">
-        <p className="text-lg font-medium">🎓 Til deg som prøver å bestå PHG113, fra Henrik</p>
+      <footer className="text-center py-8 text-sm text-sand-500">
+        Til deg som prøver å bestå PHG113, fra Henrik
       </footer>
+
+      <UtvalgModal
+        blomster={blomsterData.blomster}
+        fravalgte={fravalgte}
+        erÅpen={visUtvalg}
+        onLukk={() => setVisUtvalg(false)}
+        onLagre={lagreUtvalg}
+      />
     </div>
   );
 }
