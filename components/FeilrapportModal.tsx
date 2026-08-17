@@ -9,6 +9,8 @@ interface FeilrapportModalProps {
   onLukk: () => void;
 }
 
+const MOTTAKER = 'henrik.wo@hotmail.com';
+
 const FEIL_TYPER = [
   { id: 'feil_bilde', tekst: 'Feil blomst på bildet' },
   { id: 'feil_navn', tekst: 'Feil norsk navn' },
@@ -55,7 +57,7 @@ export default function FeilrapportModal({ blomst, erÅpen, onLukk }: Feilrappor
     );
     
     // Åpne e-post
-    window.open(`mailto:henrik@example.com?subject=${subject}&body=${body}`);
+    window.open(`mailto:${MOTTAKER}?subject=${subject}&body=${body}`);
     
     // Reset og lukk
     setValgteFeilen([]);
