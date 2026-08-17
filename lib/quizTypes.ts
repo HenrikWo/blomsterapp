@@ -24,28 +24,32 @@ export interface QuizResultat {
 
 export function genererQuiz(blomster: Blomst[], antallSpørsmål: number = 10): QuizSpørsmål[] {
   const blomsterMedBilder = blomster.filter(b => b.bildeStatus === 'FUNNET');
-  
-  if (blomsterMedBilder.length < antallSpørsmål) {
-    throw new Error('Ikke nok blomster med bilder for å lage quiz');
+
+  // Fasit + tre alternativer krever minst fire arter
+  if (blomsterMedBilder.length < 4) {
+    throw new Error('Velg minst 4 arter for å ta quiz');
   }
-  
+
+  // Har brukeren valgt færre arter enn 10, blir quizen tilsvarende kortere
+  const lengde = Math.min(antallSpørsmål, blomsterMedBilder.length);
+
   // Shuffle og velg tilfeldige blomster
   const shuffled = [...blomsterMedBilder].sort(() => 0.5 - Math.random());
-  const valgteBlomseter = shuffled.slice(0, antallSpørsmål);
-  
+  const valgteBlomseter = shuffled.slice(0, lengde);
+
   return valgteBlomseter.map(blomst => {
     // Finn andre blomster for feil-alternativer
     const andreBlomseter = blomsterMedBilder
       .filter(b => b.artNorsk !== blomst.artNorsk)
       .sort(() => 0.5 - Math.random())
       .slice(0, 3);
-    
+
     // Lag alternativer
     const alternativer = [
       blomst.artNorsk,
       ...andreBlomseter.map(b => b.artNorsk)
     ].sort(() => 0.5 - Math.random()); // Shuffle rekkefølgen
-    
+
     return {
       blomst,
       alternativer,

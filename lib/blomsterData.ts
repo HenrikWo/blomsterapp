@@ -53,12 +53,8 @@ export async function loadBlomsterData(): Promise<BlomsterData> {
           bildeUrls.push(row['wikipedia_image_file'].trim());
         }
 
-        // 4. Legg til norskflora_url som et visbart innhold (for informasjon)
-        if (row['norskflora_url'] && 
-            row['norskflora_url'].trim() !== '' && 
-            row['norskflora_url'].includes('norskflora.no')) {
-          bildeUrls.push(row['norskflora_url'].trim());
-        }
+        // Merk: norskflora_url peker til en nettside, ikke et bilde, og skal
+        // derfor ikke inn i bildeUrls. Den vises som lenke i infokortet i stedet.
 
         // Bestem bildeStatus
         let bildeStatus: 'FUNNET' | 'IKKE_FUNNET' | 'MANGLER_NAVN' = 'IKKE_FUNNET';
