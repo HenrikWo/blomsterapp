@@ -75,7 +75,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-sand-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-hav-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-skog-600 mx-auto mb-4"></div>
           <p className="text-sand-600">Laster blomsterdata…</p>
         </div>
       </div>
@@ -126,7 +126,7 @@ export default function Home() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <h1 className="text-2xl font-semibold text-hav-800 tracking-tight flex items-center gap-2">
+              <h1 className="text-2xl font-semibold text-skog-800 tracking-tight flex items-center gap-2">
                 <span aria-hidden="true">🌿</span>
                 PlantePugger
               </h1>
@@ -144,11 +144,11 @@ export default function Home() {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 onClick={() => setVisUtvalg(true)}
-                className="px-3 py-2.5 text-sm font-medium text-hav-700 bg-white border border-hav-300 rounded hover:bg-hav-50 transition-colors tabular-nums"
+                className="px-3 py-2.5 text-sm font-medium text-skog-700 bg-white border border-skog-300 rounded hover:bg-skog-50 transition-colors tabular-nums"
               >
                 Velg arter
                 {harFiltrert && (
-                  <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-hav-600 text-white rounded">
+                  <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-skog-600 text-white rounded">
                     {valgte.length}
                   </span>
                 )}
@@ -156,7 +156,7 @@ export default function Home() {
 
               <Link
                 href="/test_deg_selv"
-                className="px-4 py-2.5 bg-hav-600 hover:bg-hav-700 text-white rounded text-sm font-semibold transition-colors whitespace-nowrap"
+                className="px-4 py-2.5 bg-skog-600 hover:bg-skog-700 text-white rounded text-sm font-semibold transition-colors whitespace-nowrap"
               >
                 Test deg selv
               </Link>
@@ -173,7 +173,7 @@ export default function Home() {
 
             <button
               onClick={visNyBlomt}
-              className="w-full px-8 py-3.5 bg-hav-600 hover:bg-hav-700 text-white rounded font-semibold transition-colors"
+              className="w-full px-8 py-3.5 bg-skog-600 hover:bg-skog-700 text-white rounded font-semibold transition-colors"
             >
               Ny blomst
             </button>
@@ -190,7 +190,7 @@ export default function Home() {
             </p>
             <button
               onClick={() => setVisUtvalg(true)}
-              className="px-5 py-2.5 bg-hav-600 hover:bg-hav-700 text-white rounded font-semibold transition-colors"
+              className="px-5 py-2.5 bg-skog-600 hover:bg-skog-700 text-white rounded font-semibold transition-colors"
             >
               Velg arter
             </button>

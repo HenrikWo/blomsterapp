@@ -184,25 +184,25 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
            onClick={handleClick}>
         <div className="text-center p-6">
           <div className="text-6xl mb-4">🌸</div>
-          <h3 className="text-xl font-semibold text-hav-800">{blomst.artNorsk}</h3>
+          <h3 className="text-xl font-semibold text-skog-800">{blomst.artNorsk}</h3>
           <p className="text-sand-600 italic">{blomst.vitenskapeligNavn}</p>
           <p className="text-sm text-sand-500 mt-2">Ingen bilde tilgjengelig</p>
         </div>
         
         {/* Info overlay for blomster uten bilder */}
         {visInfo && (
-          <div className="absolute inset-0 bg-hav-900/95 rounded flex items-center justify-center p-8 transition-all duration-300">
+          <div className="absolute inset-0 bg-skog-900/95 rounded flex items-center justify-center p-8 transition-all duration-300">
             <div className="text-center text-white max-w-sm">
               <h2 className="text-3xl font-bold mb-3">{blomst.artNorsk}</h2>
-              <p className="text-lg italic text-hav-200 mb-6">{blomst.vitenskapeligNavn}</p>
+              <p className="text-lg italic text-skog-200 mb-6">{blomst.vitenskapeligNavn}</p>
               
               <div className="space-y-3 text-left bg-white/10 rounded p-4">
                 <div className="flex justify-between items-start gap-4">
-                  <span className="font-semibold text-hav-200 flex-shrink-0">Familie:</span> 
+                  <span className="font-semibold text-skog-200 flex-shrink-0">Familie:</span> 
                   <span className="text-right">{blomst.familienavn}</span>
                 </div>
                 <div className="flex justify-between items-start gap-4">
-                  <span className="font-semibold text-hav-200 flex-shrink-0">Type:</span> 
+                  <span className="font-semibold text-skog-200 flex-shrink-0">Type:</span> 
                   <span className="text-right">{blomst.type}</span>
                 </div>
               </div>
@@ -213,7 +213,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                     href={blomst.norskfloraUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 px-4 py-2.5 bg-hav-600 hover:bg-hav-700 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                    className="flex-1 px-4 py-2.5 bg-skog-600 hover:bg-skog-700 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
                     onClick={(e) => e.stopPropagation()}
                   >
                     🌿 Norsk Flora
@@ -225,7 +225,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                     href={blomst.wikipediaUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 px-4 py-2.5 bg-sand-700 hover:bg-sand-800 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                    className="flex-1 px-4 py-2.5 bg-arkiv-600 hover:bg-arkiv-700 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
                     onClick={(e) => e.stopPropagation()}
                   >
                     📖 Wikipedia
@@ -288,7 +288,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
         {/* Loading spinner */}
         {!bildeLastet && !bildeFeil && (
           <div className="absolute inset-0 flex items-center justify-center bg-sand-100">
-            <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-hav-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-skog-600"></div>
           </div>
         )}
         </div>
@@ -374,18 +374,18 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
 
       {/* Info overlay */}
       {visInfo && (
-        <div className="absolute inset-0 bg-hav-900/95 rounded flex items-center justify-center p-8 transition-all duration-300 z-20">
+        <div className="absolute inset-0 bg-skog-900/95 rounded flex items-center justify-center p-8 transition-all duration-300 z-20">
           <div className="text-center text-white max-w-sm">
             <h2 className="text-3xl font-bold mb-3">{blomst.artNorsk}</h2>
-            <p className="text-lg italic text-hav-200 mb-6">{blomst.vitenskapeligNavn}</p>
+            <p className="text-lg italic text-skog-200 mb-6">{blomst.vitenskapeligNavn}</p>
             
             <div className="space-y-3 text-left bg-white/10 rounded p-4">
               <div className="flex justify-between items-start gap-4">
-                <span className="font-semibold text-hav-200 flex-shrink-0">Familie:</span> 
+                <span className="font-semibold text-skog-200 flex-shrink-0">Familie:</span> 
                 <span className="text-right">{blomst.familienavn}</span>
               </div>
               <div className="flex justify-between items-start gap-4">
-                <span className="font-semibold text-hav-200 flex-shrink-0">Type:</span> 
+                <span className="font-semibold text-skog-200 flex-shrink-0">Type:</span> 
                 <span className="text-right">{blomst.type}</span>
               </div>
             </div>
@@ -396,7 +396,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                   href={blomst.norskfloraUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 px-4 py-2.5 bg-hav-600 hover:bg-hav-700 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                  className="flex-1 px-4 py-2.5 bg-skog-600 hover:bg-skog-700 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
                   onClick={(e) => e.stopPropagation()}
                 >
                   🌿 Norsk Flora
@@ -408,7 +408,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
                   href={blomst.wikipediaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 px-4 py-2.5 bg-sand-700 hover:bg-sand-800 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
+                  className="flex-1 px-4 py-2.5 bg-arkiv-600 hover:bg-arkiv-700 rounded transition-colors text-sm font-medium flex items-center justify-center whitespace-nowrap"
                   onClick={(e) => e.stopPropagation()}
                 >
                   📖 Wikipedia
@@ -426,7 +426,7 @@ export default function BlomsterCard({ blomst, onClick }: BlomsterCardProps) {
       {/* Subtil indikator for at man kan trykke - alltid synlig på mobil, hover på desktop */}
       <div className="absolute top-4 right-4 md:opacity-0 md:group-hover:opacity-100 opacity-60 transition-opacity z-10">
         <div className="bg-white rounded-full p-2 shadow">
-          <svg className="w-5 h-5 text-hav-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-skog-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>

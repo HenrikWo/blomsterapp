@@ -80,7 +80,7 @@ export default function FeilrapportModal({ blomst, erÅpen, onLukk }: Feilrappor
         {/* Header */}
         <div className="p-4 border-b border-sand-200">
           <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-hav-800">Rapporter feil</h2>
+            <h2 className="text-lg font-semibold text-skog-800">Rapporter feil</h2>
             <button 
               onClick={handleLukk}
               className="text-sand-500 hover:text-sand-800 text-xl"
@@ -105,7 +105,7 @@ export default function FeilrapportModal({ blomst, erÅpen, onLukk }: Feilrappor
                     type="checkbox"
                     checked={valgteFeilen.includes(feilType.id)}
                     onChange={() => handleFeilToggle(feilType.id)}
-                    className="mr-3 w-4 h-4 accent-hav-600 cursor-pointer"
+                    className="mr-3 w-4 h-4 accent-skog-600 cursor-pointer"
                   />
                   <span className="text-sand-700">{feilType.tekst}</span>
                 </label>
@@ -123,7 +123,7 @@ export default function FeilrapportModal({ blomst, erÅpen, onLukk }: Feilrappor
               value={kommentar}
               onChange={(e) => setKommentar(e.target.value)}
               placeholder="Forklar gjerne mer detaljert hva som er feil..."
-              className="w-full p-3 border border-sand-300 rounded resize-none h-20 focus:outline-none focus:border-hav-500 focus:ring-1 focus:ring-hav-500"
+              className="w-full p-3 border border-sand-300 rounded resize-none h-20 focus:outline-none focus:border-skog-500 focus:ring-1 focus:ring-skog-500"
             />
           </div>
 
@@ -145,7 +145,7 @@ export default function FeilrapportModal({ blomst, erÅpen, onLukk }: Feilrappor
             <button
               onClick={handleSend}
               disabled={valgteFeilen.length === 0}
-              className="flex-1 px-4 py-2 bg-hav-600 text-white rounded hover:bg-hav-700 disabled:bg-sand-300 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-4 py-2 bg-skog-600 text-white rounded hover:bg-skog-700 disabled:bg-sand-300 disabled:cursor-not-allowed transition-colors"
             >
               Send e-post
             </button>
