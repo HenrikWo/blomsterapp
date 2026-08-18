@@ -9,18 +9,18 @@ const config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        // Skogsgrønn - hovedfargen
-        skog: {
-          50: "#F2F7F3",
-          100: "#E1EDE5",
-          200: "#C3DACB",
-          300: "#9BC1A9",
-          400: "#6BA283",
-          500: "#4C8865",
-          600: "#40795A",
-          700: "#346249",
-          800: "#294C39",
-          900: "#1C3427",
+        // Dyp havblå - hovedfargen
+        hav: {
+          50: "#F1F5F9",
+          100: "#DEE9F2",
+          200: "#BDD3E6",
+          300: "#8FB4D2",
+          400: "#5C8FB8",
+          500: "#3E739E",
+          600: "#336089",
+          700: "#294D6D",
+          800: "#213C55",
+          900: "#17293A",
         },
         // Varm nøytral - bakgrunn og tekst
         sand: {
@@ -34,11 +34,6 @@ const config = {
           700: "#454840",
           800: "#2E302B",
           900: "#1B1C19",
-        },
-        // Dempet blå til Wikipedia-lenker
-        arkiv: {
-          600: "#33566F",
-          700: "#284457",
         },
         // Semantiske farger til quiz-tilbakemelding
         riktig: {

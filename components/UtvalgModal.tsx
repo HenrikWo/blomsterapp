@@ -119,14 +119,14 @@ export default function UtvalgModal({
         <div className="px-5 py-4 border-b border-sand-200 bg-white">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-lg font-semibold text-skog-800">Hvilke arter vil du øve på?</h2>
+              <h2 className="text-lg font-semibold text-hav-800">Hvilke arter vil du øve på?</h2>
               <p className="text-sm text-sand-600 mt-0.5">
                 Gjelder både kortene og quizen. Hak av de du vil hoppe over.
               </p>
             </div>
             <button
               onClick={onLukk}
-              className="text-sand-500 hover:text-sand-800 text-xl leading-none p-1 -m-1 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-skog-500"
+              className="text-sand-500 hover:text-sand-800 text-xl leading-none p-1 -m-1 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-hav-500"
               aria-label="Lukk"
             >
               ✕
@@ -139,11 +139,11 @@ export default function UtvalgModal({
               value={søk}
               onChange={(e) => setSøk(e.target.value)}
               placeholder="Søk etter art eller familie…"
-              className="flex-1 min-w-[180px] px-3 py-2 bg-sand-50 border border-sand-300 rounded text-sm text-sand-900 placeholder:text-sand-400 focus:outline-none focus:border-skog-500 focus:ring-1 focus:ring-skog-500"
+              className="flex-1 min-w-[180px] px-3 py-2 bg-sand-50 border border-sand-300 rounded text-sm text-sand-900 placeholder:text-sand-400 focus:outline-none focus:border-hav-500 focus:ring-1 focus:ring-hav-500"
             />
             <button
               onClick={alle}
-              className="px-3 py-2 text-sm font-medium text-skog-700 bg-skog-50 border border-skog-200 rounded hover:bg-skog-100 transition-colors"
+              className="px-3 py-2 text-sm font-medium text-hav-700 bg-hav-50 border border-hav-200 rounded hover:bg-hav-100 transition-colors"
             >
               Velg alle
             </button>
@@ -169,14 +169,14 @@ export default function UtvalgModal({
                 return (
                   <section key={navn}>
                     <div className="flex items-baseline justify-between gap-3 mb-2 pb-1.5 border-b border-sand-200">
-                      <h3 className="text-sm font-semibold text-skog-700">{navn}</h3>
+                      <h3 className="text-sm font-semibold text-hav-700">{navn}</h3>
                       <div className="flex items-center gap-3 text-xs">
                         <span className="text-sand-500 tabular-nums">
                           {påIFam}/{arter.length}
                         </span>
                         <button
                           onClick={() => settFamilie(arter, påIFam < arter.length)}
-                          className="text-skog-600 hover:text-skog-800 font-medium"
+                          className="text-hav-600 hover:text-hav-800 font-medium"
                         >
                           {påIFam < arter.length ? 'Ta med alle' : 'Fjern alle'}
                         </button>
@@ -192,7 +192,7 @@ export default function UtvalgModal({
                                 type="checkbox"
                                 checked={!av}
                                 onChange={() => vipp(b)}
-                                className="mt-0.5 w-4 h-4 shrink-0 accent-skog-600 cursor-pointer"
+                                className="mt-0.5 w-4 h-4 shrink-0 accent-hav-600 cursor-pointer"
                               />
                               <span className="min-w-0">
                                 <span
@@ -231,7 +231,7 @@ export default function UtvalgModal({
           )}
           <div className="flex items-center justify-between gap-4">
             <span className="text-sm text-sand-600 tabular-nums">
-              <strong className="text-skog-700 font-semibold">{antallValgt}</strong> av{' '}
+              <strong className="text-hav-700 font-semibold">{antallValgt}</strong> av{' '}
               {medBilde.length} arter med
             </span>
             <div className="flex gap-2">
@@ -244,7 +244,7 @@ export default function UtvalgModal({
               <button
                 onClick={() => onLagre(kladd)}
                 disabled={forFå}
-                className="px-5 py-2 text-sm font-semibold text-white bg-skog-600 rounded hover:bg-skog-700 transition-colors disabled:bg-sand-300 disabled:cursor-not-allowed"
+                className="px-5 py-2 text-sm font-semibold text-white bg-hav-600 rounded hover:bg-hav-700 transition-colors disabled:bg-sand-300 disabled:cursor-not-allowed"
               >
                 Bruk utvalget
               </button>

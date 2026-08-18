@@ -257,7 +257,7 @@ export default function TestDegSelv() {
     return (
       <div className="min-h-screen bg-sand-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-skog-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-sand-300 border-t-hav-600 mx-auto mb-4"></div>
           <p className="text-sand-600">Forbereder quiz…</p>
         </div>
       </div>
@@ -276,7 +276,7 @@ export default function TestDegSelv() {
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => setVisUtvalg(true)}
-              className="px-5 py-2.5 bg-skog-600 hover:bg-skog-700 text-white rounded font-semibold transition-colors"
+              className="px-5 py-2.5 bg-hav-600 hover:bg-hav-700 text-white rounded font-semibold transition-colors"
             >
               Velg arter
             </button>
@@ -301,10 +301,10 @@ export default function TestDegSelv() {
           <div className="bg-white border border-sand-200 rounded p-8 mb-6">
             <div className="text-center mb-6">
               <p className="text-sm uppercase tracking-wider text-sand-500 mb-3">Quiz fullført</p>
-              <h1 className="text-3xl font-semibold text-skog-800 mb-1 tabular-nums">
+              <h1 className="text-3xl font-semibold text-hav-800 mb-1 tabular-nums">
                 {quizResultat.riktigeSvar} av {quizResultat.totalSpørsmål} riktige
               </h1>
-              <p className="text-2xl font-semibold text-skog-600 tabular-nums mb-3">
+              <p className="text-2xl font-semibold text-hav-600 tabular-nums mb-3">
                 {quizResultat.poengsum}%
               </p>
               <p className="text-sand-700">{quizResultat.beskrivelse}</p>
@@ -313,7 +313,7 @@ export default function TestDegSelv() {
             {/* Progress bar */}
             <div className="w-full bg-sand-200 rounded-full h-2 mb-7">
               <div
-                className="bg-skog-600 h-2 rounded-full transition-all duration-700"
+                className="bg-hav-600 h-2 rounded-full transition-all duration-700"
                 style={{ width: `${quizResultat.poengsum}%` }}
               ></div>
             </div>
@@ -321,13 +321,13 @@ export default function TestDegSelv() {
             <div className="flex gap-3 justify-center flex-wrap">
               <button
                 onClick={() => startNyttQuiz()}
-                className="px-6 py-2.5 bg-skog-600 hover:bg-skog-700 text-white rounded font-semibold transition-colors"
+                className="px-6 py-2.5 bg-hav-600 hover:bg-hav-700 text-white rounded font-semibold transition-colors"
               >
                 Ny quiz
               </button>
               <button
                 onClick={() => setVisUtvalg(true)}
-                className="px-6 py-2.5 border border-skog-300 text-skog-700 rounded font-medium hover:bg-skog-50 transition-colors"
+                className="px-6 py-2.5 border border-hav-300 text-hav-700 rounded font-medium hover:bg-hav-50 transition-colors"
               >
                 Velg arter
               </button>
@@ -342,7 +342,7 @@ export default function TestDegSelv() {
 
           {/* Detaljert oversikt */}
           <div className="bg-white border border-sand-200 rounded p-6">
-            <h2 className="font-semibold text-skog-800 mb-4">Gjennomgang</h2>
+            <h2 className="font-semibold text-hav-800 mb-4">Gjennomgang</h2>
             <ul className="divide-y divide-sand-200">
               {quizResultat.svar.map((s, index) => (
                 <li key={index} className="flex items-center justify-between gap-4 py-2.5">
@@ -388,13 +388,13 @@ export default function TestDegSelv() {
           <div className="flex items-center justify-between gap-3 mb-4">
             <Link
               href="/"
-              className="text-sm text-skog-600 hover:text-skog-800 transition-colors"
+              className="text-sm text-hav-600 hover:text-hav-800 transition-colors"
             >
               ← Tilbake
             </Link>
             <button
               onClick={() => setVisUtvalg(true)}
-              className="text-sm text-skog-600 hover:text-skog-800 transition-colors"
+              className="text-sm text-hav-600 hover:text-hav-800 transition-colors"
             >
               Velg arter
             </button>
@@ -406,7 +406,7 @@ export default function TestDegSelv() {
             </span>
             <div className="flex-1 bg-sand-200 rounded-full h-1.5">
               <div
-                className="bg-skog-600 h-1.5 rounded-full transition-all duration-300"
+                className="bg-hav-600 h-1.5 rounded-full transition-all duration-300"
                 style={{ width: `${((gjeldendespørsmål + 1) / quiz.length) * 100}%` }}
               ></div>
             </div>
@@ -453,7 +453,7 @@ export default function TestDegSelv() {
 
             {!bildeLastet && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-2 border-sand-300 border-t-skog-600"></div>
+                <div className="animate-spin rounded-full h-10 w-10 border-2 border-sand-300 border-t-hav-600"></div>
               </div>
             )}
 
@@ -498,7 +498,7 @@ export default function TestDegSelv() {
                       navigerTilBilde(index);
                     }}
                     className={`w-2 h-2 rounded-full transition-colors ${
-                      index === aktivtBildeIndex ? 'bg-skog-600' : 'bg-sand-400 hover:bg-sand-500'
+                      index === aktivtBildeIndex ? 'bg-hav-600' : 'bg-sand-400 hover:bg-sand-500'
                     }`}
                     aria-label={`Gå til bilde ${index + 1}`}
                   />
@@ -518,7 +518,7 @@ export default function TestDegSelv() {
 
           {/* Spørsmål og svar */}
           <div className="p-5">
-            <h2 className="font-semibold text-skog-800 text-center mb-5">
+            <h2 className="font-semibold text-hav-800 text-center mb-5">
               Hvilken art er dette?
             </h2>
 
@@ -537,7 +537,7 @@ export default function TestDegSelv() {
                   }
                 } else {
                   klasser +=
-                    'bg-white border-sand-300 text-sand-900 hover:border-skog-500 hover:bg-skog-50 cursor-pointer';
+                    'bg-white border-sand-300 text-sand-900 hover:border-hav-500 hover:bg-hav-50 cursor-pointer';
                 }
 
                 return (
